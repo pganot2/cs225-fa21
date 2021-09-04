@@ -19,7 +19,6 @@ bool fileExists(std::string fileName) {
 
 //
 // Basic tests
-//
 TEST_CASE("Runs without a seg fault", "[weight=2]") {
 	sketchify("tests/in_01.png", "tests/out.png");
 }
