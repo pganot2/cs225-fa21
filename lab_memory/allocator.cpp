@@ -17,6 +17,16 @@ Allocator::Allocator(const std::string& studentFile, const std::string& roomFile
     loadStudents(studentFile);
     loadRooms(roomFile);
 }
+/**
+     * Calls a Allocator destructor.
+     * 
+     * Update 1: added delete alpha and delete rooms.
+     * Update 2: Realized that alpha and rooms are arrays so they need the [] for delete.
+     */
+Allocator::~Allocator() {
+    delete [] alpha;
+    delete [] rooms;
+}
 
 void Allocator::createLetterGroups()
 {
@@ -44,14 +54,16 @@ void Allocator::loadRooms(const std::string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    //Noticed that other loadFunctions have a fileio::getFileType(); function
+    int roomCount = fileio::getNumRooms();
     rooms = new Room[roomCount];
 
     totalCapacity = 0;
     int i = 0;
     while (fileio::areMoreRooms()) {
-        i++; 
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+        i++;
     }
 }
 
@@ -110,6 +122,7 @@ Room* Allocator::largestOpening()
 {
     int index = 0;
     int max_remaining = 0;
+    roomCount = fileio::getNumRooms();
     for (int i = 0; i < roomCount; i++) {
         if (rooms[i].spaceRemaining() > max_remaining) {
             index = i;

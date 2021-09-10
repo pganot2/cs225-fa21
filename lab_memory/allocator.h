@@ -25,6 +25,11 @@ class Allocator
      */
     Allocator(const std::string& studentFile, const std::string& roomFile);
 
+    /**
+     * Destroys or calls a destructor on an Allocator object and deletes
+     *  all new pointers.
+     */
+    ~Allocator();
 
     /**
      * Calls the solving routine to allocate student letter

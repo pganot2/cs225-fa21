@@ -36,6 +36,8 @@ HSLAPixel *myFavoriteColor() {
        'new' keyword added to return a pointer address for HSLAPixel.
 
        return 'p' instead of '&p' as '&' will change 'p' into a reference.
+
+       Changed color to dark blue with color code #004.
      */
     HSLAPixel *p = new HSLAPixel(240.0, 1.0, 0.13);
     return p;

@@ -62,8 +62,8 @@ void Room::print(std::ostream & stream /* = std::cout */)
 void Room::clear()
 {
     if (letters != NULL)
-
-        delete letters;
+        // letters is an array need [] for delete
+        delete [] letters;
 }
 
 void Room::copy(const Room& other)
@@ -72,6 +72,12 @@ void Room::copy(const Room& other)
     capacity = other.capacity;
     count = other.count;
     letterCount = other.letterCount;
-    letters = other.letters;
-
+    //Can't be letters = other.letters because this is a pointer 
+    // to other.letters and not it's own thing
+    //letters = other.letters;
+    //Instead, copy each letter to our own letter array
+    letters = new Letter[max_letters];
+    for (int i = 0; i < max_letters; i++) {
+        letters[i] = other.letters[i];
+    }
 }
