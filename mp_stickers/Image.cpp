@@ -170,7 +170,8 @@ void Image::scale(double factor) {
     for (unsigned x = 0; x < newWidth; x++) {
         for (unsigned y = 0; y < newHeight; y++) {
             cs225::HSLAPixel & pixel = getPixel(x, y);
-            // x / 2 and y / 2 causes the function not to overtruncate or be out of bounds
+            // x / factor or y / factor gets the correct pixel whether factor makes Image
+            // Bigger or smaller
             cs225::HSLAPixel & oldPixel = oldImage.getPixel(x / factor, y / factor);
             pixel = oldPixel;
         }
@@ -178,8 +179,37 @@ void Image::scale(double factor) {
 }
 
 void Image::scale(unsigned w, unsigned h) {
-    return;
+    // w and h needs to be set as doubles as if it was an int the w and h truncates
+    // giving an incorrect value
+    double widthRatio = double(w) / width();
+
+    double heightRatio = double(h) / height();
+
+    double factor;
+
+    if (widthRatio > heightRatio) {
+        factor = heightRatio;
+    } else {
+        factor = widthRatio;
+    }
+    // same process as scale(factor)
+    unsigned newWidth = width() * factor;
+
+    unsigned newHeight = height() * factor;
+
+    //Store a copy of current Image (image before expansion)
+    Image oldImage = Image(*this);
+    //resize THIS image
+    resize(newWidth, newHeight); 
+
+    //Use oldImage to align it to the larger border image
+    for (unsigned x = 0; x < newWidth; x++) {
+        for (unsigned y = 0; y < newHeight; y++) {
+            cs225::HSLAPixel & pixel = getPixel(x, y);
+            // x / factor or y / factor gets the correct pixel whether factor makes Image
+            // Bigger or smaller
+            cs225::HSLAPixel & oldPixel = oldImage.getPixel(x / factor, y / factor);
+            pixel = oldPixel;
+        }
+    }
 }
-
-
-

@@ -32,7 +32,7 @@ class StickerSheet {
       * @param other The other Scene object to copy data from
       * @return a constant Scene reference
       */
-    StickerSheet const & operator= (const StickerSheet &other);
+    StickerSheet const & operator=(const StickerSheet &other);
 
     /**
       * Modifies the maximum number of stickers that can be stored on this 
