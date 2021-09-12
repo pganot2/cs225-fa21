@@ -167,7 +167,7 @@ void Image::scale(double factor) {
     for (unsigned x = 0; x < newWidth; x++) {
         for (unsigned y = 0; y < newHeight; y++) {
             cs225::HSLAPixel & pixel = getPixel(x, y);
-            // x / 2 and y / 2 causes the function not to overtruncate or be out of bounds\
+            // x / 2 and y / 2 causes the function not to overtruncate or be out of bounds
             cs225::HSLAPixel & oldPixel = oldImage.getPixel(x / 2, y / 2);
             pixel = oldPixel;
         }
