@@ -130,10 +130,13 @@ void Image::rotateColor(double degree) {
     for (unsigned x = 0; x < width(); x++) {
         for (unsigned y = 0; y < height(); y++) {
             cs225::HSLAPixel & pixel = getPixel(x, y);
+            if (degree < 0) {
+                degree = degree / -1;
+            }
             if ((pixel.h + degree) > 360) {
                 pixel.h = 0 + (degree - (360 - pixel.h));
             } else {
-                pixel.h = pixel.h + degree;
+                pixel.h = (pixel.h + degree);
             }
         }
     }
@@ -168,7 +171,7 @@ void Image::scale(double factor) {
         for (unsigned y = 0; y < newHeight; y++) {
             cs225::HSLAPixel & pixel = getPixel(x, y);
             // x / 2 and y / 2 causes the function not to overtruncate or be out of bounds
-            cs225::HSLAPixel & oldPixel = oldImage.getPixel(x / 2, y / 2);
+            cs225::HSLAPixel & oldPixel = oldImage.getPixel(x / factor, y / factor);
             pixel = oldPixel;
         }
     }

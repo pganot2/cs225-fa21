@@ -93,7 +93,7 @@ TEST_CASE("Image rotateColor(double) keeps the hue in the range 0..360", "[weigh
   Image result = createRainbowImage();
   result.rotateColor(90);
   REQUIRE( result.getPixel(340, 90).h == 70 );
-
+  
   result.rotateColor(-180);
   REQUIRE( result.getPixel(10, 90).h == 280 );
 }
@@ -135,7 +135,7 @@ TEST_CASE("Image scale(0.5) scales pixel data in a reasonable way", "[weight=1][
   
   Image result = createRainbowImage();
   result.scale(0.5);
-
+  cout << "result:" << result.getPixel(100, 20).h << endl;
   REQUIRE( result.getPixel(100, 20).h > 180 );
   REQUIRE( result.getPixel(100, 20).h < 220 );
 }
