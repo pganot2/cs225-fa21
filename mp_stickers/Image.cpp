@@ -184,14 +184,8 @@ void Image::scale(unsigned w, unsigned h) {
     double widthRatio = double(w) / width();
 
     double heightRatio = double(h) / height();
-
-    double factor;
-
-    if (widthRatio > heightRatio) {
-        factor = heightRatio;
-    } else {
-        factor = widthRatio;
-    }
+    //Conditional Operator
+    double factor  = (widthRatio > heightRatio) ? heightRatio : widthRatio;
     // same process as scale(factor)
     unsigned newWidth = width() * factor;
 
