@@ -2,8 +2,11 @@
  * @file StickerSheet.h
  * Contains your declaration of the interface for the StickerSheet class.
  */
+
 #pragma once
 #include "Image.h"
+
+using namespace std;
 
 class StickerSheet {
     public:
@@ -92,7 +95,26 @@ class StickerSheet {
       * @return an Image object representing the drawn scene
       */
     Image render() const;
+    private:
+    /* Struct for Stickers */
+    typedef struct {
+      unsigned x;
+      unsigned y;
+      Image *image;
+    } Sticker;
 
+    Sticker *stickers;          /*< Array of Sticker pointers */
+    unsigned maxStickers;
+    Image *basePicture;
+    Image *renderImage;
+
+    /**
+     * Copies the contents of `other` to self
+     */
+    void _copy(StickerSheet const & other);
+
+    /**
+     * Destroys the contents of self
+     */
+    void _destroy();
 };
-
- 
