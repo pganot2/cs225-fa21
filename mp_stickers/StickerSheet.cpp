@@ -10,8 +10,20 @@
 #include "cs225/PNG.h"
 #include "StickerSheet.h"
 #include "Image.h"
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <memory>
 
 using namespace std;
+/*
+void StickerSheet::_copy(StickerSheet const & other) {
+    //Copy 'other' to self
+    maxStickers = other.maxStickers;
+    std::unique_ptr<Image> basePicture(new Image(*(other.basePicture)));
+    std::unique_ptr<Image> renderImage(new Image(*(other.renderImage)));
+    copy(other.stickers.begin(), other.stickers.end(), back_inserter(stickers));
+} */
 
 void StickerSheet::_copy(StickerSheet const & other) {
     //Copy 'other' to self
@@ -50,6 +62,7 @@ void StickerSheet::_destroy() {
     delete[] stickers;
     stickers = NULL;
 }
+
 StickerSheet::StickerSheet(const Image &picture, unsigned max) {
     maxStickers = max;
     basePicture = new Image(picture);
@@ -57,13 +70,17 @@ StickerSheet::StickerSheet(const Image &picture, unsigned max) {
     stickers = new Sticker[max]();
 }
 
+//StickerSheet::~StickerSheet() = default;
+
 StickerSheet::~StickerSheet() {
     _destroy();
-}
-
+} 
+//StickerSheet::StickerSheet(const StickerSheet &other) = default;
 StickerSheet::StickerSheet(const StickerSheet &other) {
     _copy(other);
 }
+//StickerSheet const & StickerSheet::operator=(const StickerSheet &other) = default;
+
 StickerSheet const & StickerSheet::operator=(const StickerSheet &other) {
     if (this != &other) {
         // Use helper function

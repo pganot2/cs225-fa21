@@ -4,6 +4,8 @@
  */
 
 #pragma once
+#include <vector>
+#include <memory>
 #include "Image.h"
 
 using namespace std;
@@ -97,12 +99,18 @@ class StickerSheet {
     Image render() const;
     private:
     /* Struct for Stickers */
-    typedef struct {
+    struct Sticker{
       unsigned x;
       unsigned y;
       Image *image;
-    } Sticker;
-
+      //std::unique_ptr<Image> image;
+    };
+    /*
+    std::vector<Sticker> stickers;
+    unsigned maxStickers;
+    std::unique_ptr<Image> basePicture;
+    std::unique_ptr<Image> renderImage;
+    */
     Sticker *stickers;          /*< Array of Sticker pointers */
     unsigned maxStickers;
     Image *basePicture;
