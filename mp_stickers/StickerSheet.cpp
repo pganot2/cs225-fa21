@@ -38,13 +38,13 @@ void StickerSheet::_destroy() {
         renderImage = NULL;
     }
     if (stickers != NULL) {
-        // delete all the new Images in each Sticker in each StickerSheet
+        // delete all the new Images in each Sticker in the StickerSheet
         for (unsigned i = 0; i < maxStickers; i++) {
             if (stickers[i].image != NULL) {
             delete stickers[i].image;
             stickers[i].image = NULL;
         }
-    }
+      }
     }
     // free the array
     delete[] stickers;
@@ -72,7 +72,7 @@ StickerSheet const & StickerSheet::operator=(const StickerSheet &other) {
     }
     return *this;
 }
-//ISSUES 
+
 void StickerSheet::changeMaxStickers(unsigned max){
     // New Array of new Maximum size
     Sticker * newMaxStickers = new Sticker[max]();
@@ -122,6 +122,7 @@ bool StickerSheet::translate(unsigned index, unsigned x, unsigned y) {
 void StickerSheet::removeSticker(unsigned index) {
     if (index < maxStickers) {
         if (stickers[index].image != NULL) {
+            delete stickers[index].image;
             stickers[index].image = NULL;
             stickers[index].x = 0;
             stickers[index].y = 0;
