@@ -167,20 +167,6 @@ Image StickerSheet::render() const {
     *renderImage = *basePicture;
     renderImage->resize(maxWidth, maxHeight);
 
-
-    for (unsigned x = basePicture->width(); x < maxWidth; x++) {
-        for (unsigned y = 0; y < maxHeight; y++) {
-            cs225::HSLAPixel & pixel = renderImage->getPixel(x, y);
-            pixel.a = 0;
-        }
-    }
-
-    for (unsigned x = 0; x < basePicture->width(); x++) {
-        for (unsigned y = basePicture->height(); y < maxHeight; y++) {
-            cs225::HSLAPixel & pixel = renderImage->getPixel(x, y);
-            pixel.a = 0;
-        }
-    }
     // Pasting Sticker over Base picture kind of like scale in part1
     //Alligning a Sticker to it's spot on the StickerSheet
     for (unsigned i = 0; i < maxStickers; i++) {
