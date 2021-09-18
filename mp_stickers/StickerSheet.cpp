@@ -16,6 +16,7 @@
 #include <memory>
 
 using namespace std;
+
 /*
 void StickerSheet::_copy(StickerSheet const & other) {
     //Copy 'other' to self
