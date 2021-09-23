@@ -22,8 +22,14 @@
  */
 int RecursionExercises::sumDigits(int n)
 {
-
-    return -1;
+    int sum = 0;
+    //base case
+    if (n == 0) {
+        return sum;
+    }
+    sum = n % 10; //Gives right most number
+    //recursive step
+    return sum + sumDigits(n / 10); // n / 10 gives n without the rightmost number 
 }
 
 /**
@@ -45,6 +51,10 @@ int RecursionExercises::sumDigits(int n)
  */
 int RecursionExercises::triangle(int rows)
 {
-
-    return -1;
+    int total = 0;
+    if (rows == 0) {
+        return total;
+    }
+    total = rows;
+    return total + triangle(rows - 1);
 }

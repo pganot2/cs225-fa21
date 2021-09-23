@@ -3,7 +3,8 @@
  * This is where you will implement the required functions for the
  * stacks and queues portion of the lab.
  */
-
+#include <stack>
+#include <queue>
 namespace QuackFun {
 
 /**
@@ -29,11 +30,22 @@ namespace QuackFun {
 template <typename T>
 T sum(stack<T>& s)
 {
-
+    //How do you keep track of values popped so you can put them all back once you're done.
+    // base case
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
-                // Note: T() is the default value for objects, and 0 for
-                // primitive types
+    if (s.empty()) {
+        return T(); // stub return value (0 for primitive types). Change this!
+                   // Note: T() is the default value for objects, and 0 for
+                  // primitive types
+    }
+    T top = s.top();
+    // Modifies stack to remove the initial top value for recursive step
+    s.pop();
+    // Recursive step
+    T result = top + sum(s);
+    // Modifies stack to return the initial top value;
+    s.push(top);
+    return result;
 }
 
 /**
@@ -55,9 +67,22 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
-
+    stack<char> s;
+    while(!input.empty()) {
+        if (input.front() == '[') {
+            s.push('[');
+        } else if (input.front() == ']') {
+            //If it is a closing bracket without an open bracket in s
+            if (s.empty()) {
+                return false;
+            }
+            s.pop();
+        }
+        input.pop();
+    }
     // @TODO: Make less optimistic
-    return true;
+    //If s is not empty, there is no matching closing bracket for the open bracket
+    return s.empty();
 }
 
 /**
@@ -79,8 +104,37 @@ template <typename T>
 void scramble(queue<T>& q)
 {
     stack<T> s;
-    // optional: queue<T> q2;
+    queue<T> q2;
+    // Your code heres
+    int block = 1;
+    //count of how many block's we finished
+    int count  = 0;
+    while (!q.empty()) {
+        if (block == count) {
+            block++;
+            count = 0;
+        }
+        //if block is an odd number of blocks don't change anything
+        if (block % 2 != 0) {
+            q2.push(q.front());
+            q.pop();
+            count++;
+        } else { //If block is an even number
+            //pushing elements into stack reverses them, first one in, last one out
+            s.push(q.front());
+            q.pop();
+            count++;
+            if (block == count || q.empty()) {
+                while (!s.empty()) {
+                    q2.push(s.top());
+                    s.pop();
+                }
+            }
+        }
+    }
+    //push input elements in q into stack, reversing the certain number of elements
 
-    // Your code here
+    //swap the scrambeled q and input q
+    swap(q, q2);
 }
 }

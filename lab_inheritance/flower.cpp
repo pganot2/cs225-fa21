@@ -70,11 +70,13 @@ void Flower::drawPetals(PNG* canvas, const Vector2& center, int x, int y) const
     petal.set_center(Vector2(center.x() - y, center.y() - x));
     petal.draw(canvas);
 }
+
 Flower::~Flower() {
     delete stem;
     delete pistil;
     delete leaf;
 }
+
 void Flower::draw(PNG* canvas) const
 {
     stem->draw(canvas);
