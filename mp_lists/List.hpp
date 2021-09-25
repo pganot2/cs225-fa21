@@ -6,8 +6,10 @@
 template <class T>
 List<T>::List() { 
   // @TODO: graded in MP3.1
-    ListNode* head_ = NULL;
-    ListNode* tail_ = NULL;
+  // Removed ListNode* for head_ and tail_ | Added length_ = 0;
+    head_ = NULL;
+    tail_ = NULL;
+    length_ = 0;
 }
 
 /**
@@ -17,7 +19,7 @@ List<T>::List() {
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(NULL);
+  return List<T>::ListIterator(head_);
 }
 
 /**
@@ -26,7 +28,7 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(NULL);
+  return List<T>::ListIterator(tail_);
 }
 
 
@@ -37,6 +39,23 @@ typename List<T>::ListIterator List<T>::end() const {
 template <typename T>
 void List<T>::_destroy() {
   /// @todo Graded in MP3.1
+  ListNode * curr = head_;
+  //no need to destroy anything
+  if (curr == NULL) {
+    return;
+  }
+  //loop through whole List
+  /*
+  while (curr != NULL) {
+    curr = curr->next;
+    if (curr->next != NULL) {
+      curr->next->prev = curr->prev;
+    }
+    if (curr->prev != NULL) {
+      curr->prev->next = curr->next;
+    }
+    delete curr;
+  } */
 }
 
 /**
@@ -48,18 +67,32 @@ void List<T>::_destroy() {
 template <typename T>
 void List<T>::insertFront(T const & ndata) {
   /// @todo Graded in MP3.1
+  // Makes a new ListNode to be inserted at front
   ListNode * newNode = new ListNode(ndata);
-  newNode -> next = head_;
+  // Assigns prev as NULL since newNode is the first item on the List
   newNode -> prev = NULL;
-  
-  if (head_ != NULL) {
-    head_ -> prev = newNode;
+  // Checks if List is empty
+  if (head_ == NULL) {
+    head_ = newNode;
+    if (tail_ == NULL) {
+      tail_ = newNode;
+    }
+    // Increases length_ by 1 after adding newNode
+    length_++;
+    return;
   }
+  // Connects the old head_ to the newNode
+  head_ -> prev = newNode;
+  // Connect newNode to the old head_
+  newNode -> next = head_;
+  // Sets newNode as the head_
+  head_ = newNode;
+
   if (tail_ == NULL) {
     tail_ = newNode;
   }
   
-
+  // Increases length_ by 1 after adding newNode
   length_++;
 
 }
@@ -73,6 +106,34 @@ void List<T>::insertFront(T const & ndata) {
 template <typename T>
 void List<T>::insertBack(const T & ndata) {
   /// @todo Graded in MP3.1
+  // Makes a new ListNode to insert at back
+  ListNode * newNode = new ListNode(ndata);
+  // Assigns next as NULL since newNode is the last item on the list
+  newNode -> next = NULL;
+  // Checks if List is empty
+  if (tail_ == NULL) {
+    tail_ = newNode;
+    if (head_ == NULL) {
+      head_ = newNode;
+    }
+    // Increases length_ by 1 after adding newNode
+    length_++;
+    return;
+  }
+  // Connects the old tail_ to newNode
+  tail_ -> next = newNode;
+  // Connects newNode to the old tail_
+  newNode -> prev = tail_;
+  // Sets newNode as tail_
+  tail_ = newNode;
+
+  if (head_ == NULL) {
+    head_ = newNode;
+  }
+
+  // Increases length_ by 1 after adding newNode
+  length_++;
+
 }
 
 /**

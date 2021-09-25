@@ -35,7 +35,7 @@ TEST_CASE("List::insertBack size", "[weight=2][part=1][valgrind]") {
 
 TEST_CASE("List::insert contents", "[weight=4][part=1][valgrind]") {
     List<int> list;
-
+    
     list.insertBack(3);
     list.insertBack(2);
     list.insertBack(1);

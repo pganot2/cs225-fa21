@@ -29,7 +29,7 @@ int RecursionExercises::sumDigits(int n)
     }
     sum = n % 10; //Gives right most number
     //recursive step
-    return sum + sumDigits(n / 10); // n / 10 gives n without the rightmost number 
+    return sum + sumDigits(n / 10); // n / 10 gives n without the rightmost number
 }
 
 /**
