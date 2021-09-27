@@ -251,5 +251,3 @@ TEST_CASE("List::ListIterator::end is not ::begin in a non-empty list", "[weight
 
     REQUIRE( (bool)(list.begin() != list.end()) );
 }
-
-

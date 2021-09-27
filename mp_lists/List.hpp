@@ -28,7 +28,8 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(tail_);
+  // Changed it back to NULL and it worked?
+  return List<T>::ListIterator(NULL);
 }
 
 
@@ -39,23 +40,19 @@ typename List<T>::ListIterator List<T>::end() const {
 template <typename T>
 void List<T>::_destroy() {
   /// @todo Graded in MP3.1
-  ListNode * curr = head_;
-  //no need to destroy anything
-  if (curr == NULL) {
+
+  // Checks if the list is empty
+  if (length_ == 0 || head_ == NULL || tail_ == NULL) {
     return;
   }
-  //loop through whole List
-  /*
+  ListNode * curr = head_ -> next;
+  // Traverses the whole list and deletes each ListNode
   while (curr != NULL) {
-    curr = curr->next;
-    if (curr->next != NULL) {
-      curr->next->prev = curr->prev;
-    }
-    if (curr->prev != NULL) {
-      curr->prev->next = curr->next;
-    }
-    delete curr;
-  } */
+    delete curr -> prev;
+    curr = curr -> next;
+    length_--;
+  }
+  delete tail_;
 }
 
 /**
