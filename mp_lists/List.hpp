@@ -153,17 +153,17 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
   ListNode * curr = start;
-
-  for (int i = 0; i < splitPoint || curr != NULL; i++) {
+  // Removed || curr != NULL cause why is that there in the first place?
+  for (int i = 0; i < splitPoint; i++) {
     curr = curr->next;
   }
-
+  // Splits the list by setting curr as the start point
   if (curr != NULL) {
-      curr->prev->next = NULL;
-      curr->prev = NULL;
+      curr -> prev -> next = NULL;
+      curr -> prev = NULL;
   }
 
-  return NULL;
+  return curr;
 }
 
 /**
