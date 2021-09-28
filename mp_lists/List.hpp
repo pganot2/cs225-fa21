@@ -152,6 +152,15 @@ void List<T>::insertBack(const T & ndata) {
 template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
+  // Checks split edge cases at 0
+  if (splitPoint == 0) {
+    return start;
+  }
+  // Checks split edge cases when splitPoint is an invalid index
+  if (splitPoint >= length_) {
+    return start;
+  }
+
   ListNode * curr = start;
   // Removed || curr != NULL cause why is that there in the first place?
   for (int i = 0; i < splitPoint; i++) {
@@ -161,9 +170,10 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   if (curr != NULL) {
       curr -> prev -> next = NULL;
       curr -> prev = NULL;
+      return curr;
   }
 
-  return curr;
+  return NULL;
 }
 
 /**
@@ -179,6 +189,46 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 template <typename T>
 void List<T>::tripleRotate() {
   // @todo Graded in MP3.1
+
+  // tripleRotate does not do anything if list is NULL or empty
+
+  if (head_ == NULL || tail_ == NULL || length_ < 3) {
+    return;
+  }
+
+  // Loop that loops three nodes at a time
+  for (int i = 0; i < length_; i += 3) {
+
+    // Initializes ListNodes to be rotated before modification
+    ListNode* node1 = head_;
+    int index = 0;
+    while(index != i) {
+      node1 = node1 -> next;
+      index++;
+    }
+    ListNode* node2 = node1 -> next;
+    ListNode* node3 = node2 -> next;
+
+    // Checks if the loop is at it's final iteration to update tail_
+    if (i == length_ - 1) {
+      tail_ = node1;
+      node1 -> next = NULL;
+    } else {
+      node1 -> next = node3 -> next;
+    }
+    // Checks if the loop is at it's first iteration to update head_
+
+    if (i == 0) {
+      head_ = node2;
+      node2 -> prev = NULL;
+    } else {
+      node2 -> prev = node1 -> prev;
+    }
+
+    // tripleRotate main
+    node3 -> next = node1;
+    node1 -> prev = node3;
+  }
 }
 
 
@@ -204,6 +254,7 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.2
+
 }
 
 /**

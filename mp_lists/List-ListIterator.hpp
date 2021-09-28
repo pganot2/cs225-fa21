@@ -46,8 +46,8 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     }
 
     bool operator==(const ListIterator& rhs) {
-        return position_ == rhs.position_;
-        //!(*this != rhs);
+        return !(*this != rhs);
+        //position_ == rhs.position_;
     }
 
     const T& operator*() {
