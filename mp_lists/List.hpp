@@ -202,32 +202,38 @@ void List<T>::tripleRotate() {
     // Initializes ListNodes to be rotated before modification
     ListNode* node1 = head_;
     int index = 0;
+
+    // Traverses the list to the correct starting location
     while(index != i) {
       node1 = node1 -> next;
       index++;
     }
+
     ListNode* node2 = node1 -> next;
     ListNode* node3 = node2 -> next;
+    ListNode* node4 = node1 -> prev;
+
+    // Checks if the loop is at it's first iteration to update head_
+    if (i == 0) {
+      head_ = node2;
+      //node2 -> prev = NULL;
+    }
 
     // Checks if the loop is at it's final iteration to update tail_
     if (i == length_ - 1) {
       tail_ = node1;
-      node1 -> next = NULL;
-    } else {
-      node1 -> next = node3 -> next;
-    }
-    // Checks if the loop is at it's first iteration to update head_
-
-    if (i == 0) {
-      head_ = node2;
-      node2 -> prev = NULL;
-    } else {
-      node2 -> prev = node1 -> prev;
+      //node1 -> next = NULL;
     }
 
     // tripleRotate main
-    node3 -> next = node1;
+    node2 -> prev = node1 -> prev;
     node1 -> prev = node3;
+    node1 -> next = node3 -> next;
+    node3 -> next = node1;
+    if (node1 -> next != NULL) {
+      node4 = node1 -> next;
+      node4 -> prev = node1;
+    }
   }
 }
 
@@ -254,7 +260,25 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.2
+  ListNode * temp = NULL;
+  ListNode * curr = startPoint;
 
+  // Swaps the prev ListNode and the next ListNode pointers
+  while (curr != NULL) {
+    // Keeps old previous value
+    temp = curr -> prev;
+    // Sets new previous value
+    curr -> prev = curr -> next;
+    // Sets next value as old previous
+    curr -> next = temp;
+    
+    curr = curr -> prev;
+  }
+
+  if (temp != NULL) {
+    endPoint = startPoint;
+    startPoint = temp -> prev;
+  }
 }
 
 /**
@@ -266,6 +290,7 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
+
 }
 
 
