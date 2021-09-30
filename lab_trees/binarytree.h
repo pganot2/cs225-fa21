@@ -171,8 +171,19 @@ class BinaryTree
          */
         void printLeftToRight(const Node* subRoot) const;
 
+        /**
+         * Private helper function for the public mirror function.
+         * @param subRoot The current node in the recursion
+         */
+        void mirror(Node*& subRoot);
 
-
+        /**
+         * isOrdered() helper function recursive version
+         * @return True if an in-order traversal of the tree would produce a
+         *  nondecreasing list output values, and false otherwise. This is also the
+         *  criterion for a binary tree to be a binary search tree.
+         */
+        bool isOrderedRecursive(Node * subRoot, Node * leftNode, Node * rightNode) const;
 
         /**
          * Private helper function for the sorted public insert function.
