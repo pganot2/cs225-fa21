@@ -201,9 +201,9 @@ void List<T>::tripleRotate() {
 
     // Initializes ListNodes to be rotated before modification
     ListNode* node1 = head_;
-    int index = 0;
 
     // Traverses the list to the correct starting location
+    int index = 0;
     while(index != i) {
       node1 = node1 -> next;
       index++;
@@ -211,7 +211,6 @@ void List<T>::tripleRotate() {
 
     ListNode* node2 = node1 -> next;
     ListNode* node3 = node2 -> next;
-    ListNode* node4 = node1 -> prev;
 
     // Checks if the loop is at it's first iteration to update head_
     if (i == 0) {
@@ -220,20 +219,26 @@ void List<T>::tripleRotate() {
     }
 
     // Checks if the loop is at it's final iteration to update tail_
-    if (i == length_ - 1) {
+    // Change if statement to handle length not multiple of 3
+    if (i == length_ - 3) {
       tail_ = node1;
       //node1 -> next = NULL;
     }
 
     // tripleRotate main
+    //Node1 -> next is pointing to 4, but should be pointing to 
     node2 -> prev = node1 -> prev;
-    node1 -> prev = node3;
     node1 -> next = node3 -> next;
-    node3 -> next = node1;
-    if (node1 -> next != NULL) {
-      node4 = node1 -> next;
-      node4 -> prev = node1;
+    // <1 2 3 4 5 6>
+    if (node1 -> prev != NULL) {
+      node1 -> prev -> next = node2;
     }
+    node1 -> prev = node3;
+    // Checks fourth node to connect to the first node
+    if (node3 -> next != NULL) {
+      node3 -> next -> prev = node1;
+    }
+    node3 -> next = node1;
   }
 }
 
@@ -291,6 +296,21 @@ template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
 
+  // Edge case if n is 0 (Don't change list)
+  if (n == 0) {
+    return;
+  }
+
+  // Edge case if n is greater than length of the list
+  if (n >= length_) {
+    reverse(head_, tail_);
+    return;
+  }
+
+  ListNode * startPoint;
+  ListNode * endPoint;
+
+  reverse(startPoint, endPoint);
 }
 
 
@@ -332,6 +352,35 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
+  
+  if (first == NULL &&  second == NULL) {
+    return NULL;
+  }
+
+  if (first == NULL) {
+    return second;
+  }
+
+  if (second == NULL) {
+    return first;
+  }
+
+  // Given two sorted arrays
+  // Compare the first values
+  // If a value is smaller in one array set second
+  /*
+  ListNode * curr;
+  while (first != NULL && second != NULL) {
+    if (second -> data > first -> data) {
+      curr = first;
+      first = first -> next;
+      break;
+    } else {
+      curr = second;
+      second = second -> next;
+      break;
+    }
+  } */
   return NULL;
 }
 
