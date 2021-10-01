@@ -197,7 +197,7 @@ void List<T>::tripleRotate() {
   }
 
   // Loop that loops three nodes at a time
-  for (int i = 0; i < length_; i += 3) {
+  for (int i = 0; i < length_ - (length_ % 3); i += 3) {
 
     // Initializes ListNodes to be rotated before modification
     ListNode* node1 = head_;
@@ -205,7 +205,9 @@ void List<T>::tripleRotate() {
     // Traverses the list to the correct starting location
     int index = 0;
     while(index != i) {
-      node1 = node1 -> next;
+      if (node1 != NULL) {
+        node1 = node1 -> next;
+      }
       index++;
     }
 
@@ -215,18 +217,16 @@ void List<T>::tripleRotate() {
     // Checks if the loop is at it's first iteration to update head_
     if (i == 0) {
       head_ = node2;
-      //node2 -> prev = NULL;
     }
 
     // Checks if the loop is at it's final iteration to update tail_
     // Change if statement to handle length not multiple of 3
     if (i == length_ - 3) {
       tail_ = node1;
-      //node1 -> next = NULL;
     }
 
     // tripleRotate main
-    //Node1 -> next is pointing to 4, but should be pointing to 
+    //Node1 -> next is pointing to 4, but should be pointing to
     node2 -> prev = node1 -> prev;
     node1 -> next = node3 -> next;
     // <1 2 3 4 5 6>

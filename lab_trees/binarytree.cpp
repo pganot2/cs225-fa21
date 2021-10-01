@@ -166,6 +166,7 @@ bool BinaryTree<T>::isOrderedRecursive(Node * subRoot, Node * leftNode, Node * r
 
     bool treeRight = isOrderedRecursive(subRoot -> right, subRoot, rightNode);
     bool treeLeft =  isOrderedRecursive(subRoot -> left, leftNode, subRoot);
+    
     return treeRight && treeLeft;
 }
 
