@@ -413,8 +413,8 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
   if (second == NULL) {
     return first;
   }
-  // Starting Node of new merged list to be returned
 
+  // Starting Node of new merged list to be returned
   ListNode* startNode;
   ListNode* temp;
 
@@ -429,10 +429,11 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 
   temp = startNode;
   // Iterative merge implementation
-  //Travers through both lists
+  //Traverses through both lists
   while (first != NULL && second != NULL) {
 
     if (first -> data < second -> data) {
+      // Connects the smaller data to the list
       temp -> next = first;
       first -> prev = temp;
       first = first -> next;
