@@ -45,14 +45,16 @@ void List<T>::_destroy() {
   if (length_ == 0 || head_ == NULL || tail_ == NULL) {
     return;
   }
-  ListNode * curr = head_ -> next;
+  ListNode * curr = head_;
   // Traverses the whole list and deletes each ListNode
-  while (curr != NULL) {
-    delete curr -> prev;
-    curr = curr -> next;
+  while (head_ != NULL) {
+    curr = head_;
+    head_ = head_ -> next;
+    delete curr;
+    curr = nullptr;
     length_--;
   }
-  delete tail_;
+  delete curr;
 }
 
 /**
@@ -153,6 +155,9 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
   // Checks split edge cases at 0
+  if (start == NULL || start -> next == NULL) {
+    return start;
+  }
   if (splitPoint == 0) {
     return start;
   }
@@ -164,7 +169,11 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   ListNode * curr = start;
   // Removed || curr != NULL cause why is that there in the first place?
   for (int i = 0; i < splitPoint; i++) {
-    curr = curr->next;
+    if (curr -> next != NULL) {
+      curr = curr->next;
+    } else {
+      return start;
+    }
   }
   // Splits the list by setting curr as the start point
   if (curr != NULL) {
@@ -179,9 +188,9 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 /**
   * Modifies List using the rules for a TripleRotate.
   *
-  * This function will to a wrapped rotation to the left on every three 
+  * This function will do a wrapped rotation to the left on every three 
   * elements in the list starting for the first three elements. If the 
-  * end of the list has a set of 1 or 2 elements, no rotation all be done 
+  * end of the list has a set of 1 or 2 elements, no rotation at all will be done 
   * on the last 1 or 2 elements.
   * 
   * You may NOT allocate ANY new ListNodes!
@@ -220,16 +229,13 @@ void List<T>::tripleRotate() {
     }
 
     // Checks if the loop is at it's final iteration to update tail_
-    // Change if statement to handle length not multiple of 3
     if (i == length_ - 3) {
       tail_ = node1;
     }
 
     // tripleRotate main
-    //Node1 -> next is pointing to 4, but should be pointing to
     node2 -> prev = node1 -> prev;
     node1 -> next = node3 -> next;
-    // <1 2 3 4 5 6>
     if (node1 -> prev != NULL) {
       node1 -> prev -> next = node2;
     }
@@ -265,11 +271,17 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.2
-  ListNode * temp = NULL;
-  ListNode * curr = startPoint;
+
+  if (startPoint == NULL || endPoint == NULL || startPoint == endPoint) {
+    return;
+  }
+  ListNode* curr = startPoint;
+  ListNode* startPointPrev = startPoint -> prev;
+  ListNode* endPointNext = endPoint -> next;
+  ListNode* temp = NULL;
 
   // Swaps the prev ListNode and the next ListNode pointers
-  while (curr != NULL) {
+  while (curr != endPointNext) {
     // Keeps old previous value
     temp = curr -> prev;
     // Sets new previous value
@@ -280,9 +292,36 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
     curr = curr -> prev;
   }
 
-  if (temp != NULL) {
-    endPoint = startPoint;
-    startPoint = temp -> prev;
+  if (startPointPrev != NULL) {
+    startPointPrev -> next = endPoint; // startPoints new next is endPoints old next
+    endPoint -> prev = startPointPrev; // endPoints new previous is startPoints new previous
+  } else {
+    endPoint -> prev = NULL;
+  }
+
+  if (endPointNext != NULL) {
+    startPoint -> next = endPointNext;
+    endPointNext -> prev = startPoint;
+  } else {
+    startPoint -> next = NULL;
+  }
+
+  // Swaps startPoint and endPoint
+
+  std::swap(startPoint, endPoint);
+
+  /*
+  temp = startPoint;
+  startPoint = endPoint;
+  endPoint = temp; */
+
+  // Change tail_ so that it is at the end of the list
+  if (tail_ == startPoint) {
+    tail_ = endPoint;
+  }
+  // Change head_ so that it is at the front of the list
+  if (head_ == endPoint) {
+    head_ = startPoint;
   }
 }
 
@@ -297,20 +336,30 @@ void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
 
   // Edge case if n is 0 (Don't change list)
-  if (n == 0) {
+  if (n <= 0) {
     return;
   }
 
   // Edge case if n is greater than length of the list
   if (n >= length_) {
-    reverse(head_, tail_);
+    reverse();
     return;
   }
 
-  ListNode * startPoint;
-  ListNode * endPoint;
-
-  reverse(startPoint, endPoint);
+  ListNode* temp1 = head_;
+  while(temp1 != NULL) {
+    ListNode* startPoint = temp1;
+    for (int i = 1; i < n; i++) {
+      if (temp1 != tail_) {
+        temp1 = temp1 -> next;
+      } else {
+        reverse(startPoint, tail_);
+        return;
+      }
+    }
+    reverse(startPoint, temp1);
+    temp1 = temp1 -> next;
+  }
 }
 
 
@@ -352,8 +401,8 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
-  
-  if (first == NULL &&  second == NULL) {
+
+  if (first == NULL && second == NULL) {
     return NULL;
   }
 
@@ -364,24 +413,48 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
   if (second == NULL) {
     return first;
   }
+  // Starting Node of new merged list to be returned
 
-  // Given two sorted arrays
-  // Compare the first values
-  // If a value is smaller in one array set second
-  /*
-  ListNode * curr;
+  ListNode* startNode;
+  ListNode* temp;
+
+  // `first` Node is starting node if first node data is less than second node data
+  if (first -> data < second -> data) {
+    startNode = first;
+    first = first -> next;
+  } else { // `second` Node is starting Node since second node data is < first node data
+    startNode = second;
+    second = second -> next;
+  }
+
+  temp = startNode;
+  // Iterative merge implementation
+  //Travers through both lists
   while (first != NULL && second != NULL) {
-    if (second -> data > first -> data) {
-      curr = first;
+
+    if (first -> data < second -> data) {
+      temp -> next = first;
+      first -> prev = temp;
       first = first -> next;
-      break;
-    } else {
-      curr = second;
+    } else { // If second node is smaller
+      temp -> next = second;
+      second -> prev = temp;
       second = second -> next;
-      break;
     }
-  } */
-  return NULL;
+    // Increase the node to the last inserted node
+    temp = temp -> next;
+  }
+  // Checks if second list is completely inserted.
+  if (first != NULL) {
+    // Connects first node to the second list
+    temp -> next = first;
+    first -> prev = temp;
+  } else {
+    // Connects second node with the last node of first
+    temp -> next = second;
+    second -> prev = temp;
+  }
+  return startNode;
 }
 
 /**
@@ -398,5 +471,18 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in MP3.2
-  return NULL;
+
+  // Base case
+  if (chainLength == 1) {
+    return start;
+  }
+
+  ListNode* secondStart = split(start, chainLength / 2);
+
+  // Recursively merges first half and second half of list
+  ListNode* merge1 = mergesort(start, chainLength / 2);
+  ListNode* merge2 = mergesort(secondStart, chainLength - (chainLength / 2));
+
+  // Merge the two sorted halves back together into a single list
+  return merge(merge1, merge2);
 }

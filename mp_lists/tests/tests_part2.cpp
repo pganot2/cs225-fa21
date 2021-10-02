@@ -107,6 +107,7 @@ TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
 }
 
 TEST_CASE("List::sort simple #2", "[weight=2][part=2][valgrind]") {
+
     List<std::string> list;
 
     list.insertBack("c");
