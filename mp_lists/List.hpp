@@ -335,7 +335,7 @@ template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
 
-  // Edge case if n is 0 (Don't change list)
+  // Edge case if n is 0 or less than 0
   if (n <= 0) {
     return;
   }
@@ -402,14 +402,17 @@ template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
 
+  // Checks if both lists are empty
   if (first == NULL && second == NULL) {
     return NULL;
   }
 
+  // Checks if only the first list is NULL
   if (first == NULL) {
     return second;
   }
 
+  // Checks if only the second list is NULL
   if (second == NULL) {
     return first;
   }
