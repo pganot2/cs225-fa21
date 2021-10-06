@@ -25,6 +25,42 @@ class List {
      * encapsulation---the end user does not need to know our node-based
      * implementation details.
      */
+    // class ListNode {
+    //   public:
+    //     /**
+    //      * Default ListNode constructor.
+    //      * Implemented for you.
+    //      * @see List-given.hpp
+    //      */
+    //     ListNode();
+
+    //     /**
+    //      * Constructs a ListNode with the given data.
+    //      * Implemented for you.
+    //      * @see List-given.hpp
+    //      */
+    //     ListNode(const T & ndata);
+
+    //     /**
+    //      * A pointer to the next node in the list. May be NULL
+    //      * if one does not exist.
+    //      */
+    //     ListNode* next;
+
+    //     /**
+    //      * A pointer to the previous node in the list. May be NULL if
+    //      * one does not exist.
+    //      */
+    //     ListNode* prev;
+
+    //     /**
+    //      * The data contained in this node. We do not allow you to
+    //      * modify node data, so it is const.
+    //      */
+    //     const T data;
+    // };
+
+  public:
     class ListNode {
       public:
         /**
@@ -59,8 +95,6 @@ class List {
          */
         const T data;
     };
-
-  public:
     /**
      * Default List constructor.
      * Creates an empty List.
@@ -204,6 +238,10 @@ class List {
     template <class Iter>
     List(const Iter& start, const Iter& end);
 
+    ListNode* head_;
+
+    ListNode* tail_;
+
   private:
     /*
      * Private member variables.
@@ -215,12 +253,12 @@ class List {
     /**
      * The head of the List. May be NULL if the List is empty.
      */
-    ListNode* head_;
+    // ListNode* head_;
 
     /**
      * The tail of the list. May be NULL if the List is empty.
      */
-    ListNode* tail_;
+    // ListNode* tail_;
 
     /**
      * The length of the current List. Do not forget to update it!

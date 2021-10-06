@@ -205,23 +205,31 @@ void List<T>::tripleRotate() {
     return;
   }
 
+  ListNode* temp = head_;
+
   // Loop that loops three nodes at a time
   for (int i = 0; i < length_ - (length_ % 3); i += 3) {
 
     // Initializes ListNodes to be rotated before modification
-    ListNode* node1 = head_;
 
-    // Traverses the list to the correct starting location
+    ListNode* node1 = temp;
+
+    ListNode* node2 = node1 -> next;
+
+    ListNode* node3 = node2 -> next;
+
+    if (node3 != NULL) {
+      temp = node3 -> next;
+    }
+    /*
+    Traverses the list to the correct starting location
     int index = 0;
-    while(index != i) {
+    while(index != i) { // Might cause problem for time
       if (node1 != NULL) {
         node1 = node1 -> next;
       }
       index++;
-    }
-
-    ListNode* node2 = node1 -> next;
-    ListNode* node3 = node2 -> next;
+    } */
 
     // Checks if the loop is at it's first iteration to update head_
     if (i == 0) {
@@ -350,13 +358,16 @@ void List<T>::reverseNth(int n) {
   while(temp1 != NULL) {
     ListNode* startPoint = temp1;
     for (int i = 1; i < n; i++) {
+      // Changes temp1 value until it reaches n
       if (temp1 != tail_) {
         temp1 = temp1 -> next;
       } else {
+        // If temp1 reaches the tail_ then it ends and simply reverses from head to tail
         reverse(startPoint, tail_);
         return;
       }
     }
+    //Reverses from startPoint to temp1
     reverse(startPoint, temp1);
     temp1 = temp1 -> next;
   }
