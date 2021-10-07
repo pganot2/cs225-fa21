@@ -40,7 +40,13 @@ public:
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
-
+    // Every ImageTraversal will start at a provided Point
+    Point start;
+    // ImageTraversal::end() exists, so an end variable might be useful to signify the end
+    Point end;
+    // The point has already been visited (a traversal never visits the same point twice)
+    bool visited;
+    double tolerance;
   };
 
   /**

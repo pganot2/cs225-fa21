@@ -24,6 +24,9 @@
  */
 DFS::DFS(const PNG & png, const Point & start, double tolerance) {  
   /** @todo [Part 1] */
+  // Sub class almost 
+  // One uses a queue and one uses a stack
+  // Think about how those data structures would make that DFS or BFS
 }
 
 /**
