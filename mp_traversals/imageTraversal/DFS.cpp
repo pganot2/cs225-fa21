@@ -24,9 +24,9 @@
  */
 DFS::DFS(const PNG & png, const Point & start, double tolerance) {  
   /** @todo [Part 1] */
-  // Sub class almost 
-  // One uses a queue and one uses a stack
-  // Think about how those data structures would make that DFS or BFS
+  // Uses stack
+  // returning an ImageTraversal
+
 }
 
 /**
@@ -34,7 +34,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  return ImageTraversal::Iterator(png, start, tolerance, this);
 }
 
 /**

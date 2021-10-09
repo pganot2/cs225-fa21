@@ -4,6 +4,7 @@
 #pragma once
 
 #include <iterator>
+#include <vector>
 #include "../cs225/HSLAPixel.h"
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -29,24 +30,30 @@ public:
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
-
+    Iterator(PNG & setPNG, Point & setStart, double & setTolerance, ImageTraversal* setTraversal);
+    //ImageTraversal();
+    // add own constructor that constructs a DFS or BFS
     Iterator & operator++();
     Point operator*();
     bool operator!=(const Iterator &other);
 
     /** @todo [Part 1] */
     /** add member functions if neccesary*/
-
+    bool checkTolerance(Point &p);
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
+    ImageTraversal* traversal;
     // Every ImageTraversal will start at a provided Point
     Point start;
     // ImageTraversal::end() exists, so an end variable might be useful to signify the end
-    Point end;
+    Point current;
     // The point has already been visited (a traversal never visits the same point twice)
-    bool visited;
+    PNG png;
     double tolerance;
+    int rows;
+    int cols;
+    //vector<bool> visited; 2D vector that tells if Point  (x,y) visited
   };
 
   /**

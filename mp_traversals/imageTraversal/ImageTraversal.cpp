@@ -36,6 +36,17 @@ ImageTraversal::Iterator::Iterator() {
 }
 
 /**
+ * iterator constructor.
+ */
+ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setTolerance, ImageTraversal* setTraversal) {
+  /** @todo [Part 1] */
+  png = setPNG;
+  start = setStart;
+  tolerance = setTolerance;
+  traversal = setTraversal;
+}
+
+/**
  * Iterator increment opreator.
  *
  * Advances the traversal of the image.
@@ -53,7 +64,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
   // return Point(0, 0);
-  return point;
+  return current;
 }
 
 /**
