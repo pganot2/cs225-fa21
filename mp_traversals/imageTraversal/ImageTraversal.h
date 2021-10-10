@@ -31,8 +31,7 @@ public:
   public:
     Iterator();
     Iterator(PNG & setPNG, Point & setStart, double & setTolerance, ImageTraversal* setTraversal);
-    //ImageTraversal();
-    // add own constructor that constructs a DFS or BFS
+    // add own constructor that constructs a DFS or BFS ?? 
     Iterator & operator++();
     Point operator*();
     bool operator!=(const Iterator &other);
@@ -43,17 +42,30 @@ public:
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
-    ImageTraversal* traversal;
-    // Every ImageTraversal will start at a provided Point
-    Point start;
-    // ImageTraversal::end() exists, so an end variable might be useful to signify the end
-    Point current;
-    // The point has already been visited (a traversal never visits the same point twice)
+
+    /** PNG image to traverse on*/
     PNG png;
+
+    /** Provided start point for an image traversal*/
+    Point start;
+
+    /** Current point for an image traversal*/
+    Point current;
+  
+    /** Provided tolerance value for an image traversal*/
     double tolerance;
-    int rows;
-    int cols;
-    //vector<bool> visited; 2D vector that tells if Point  (x,y) visited
+
+    /** An ImageTraversal instance used for signifiying whether its a DFS or BFS*/
+    ImageTraversal* traversal;
+
+    /** Amount of rows in an image for a traversal*/
+    unsigned rows;
+
+    /** Amount of columns in an image for a traversal*/
+    unsigned columns;
+    
+    /** 2D boolean vector that tells if a Point(x, y) has been visited*/
+    std::vector<std::vector<bool>> visited;
   };
 
   /**
