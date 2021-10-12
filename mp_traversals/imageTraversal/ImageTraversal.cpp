@@ -81,13 +81,13 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 
   current = traversal->pop();
 
-  while (!(traversal->empty()) || visited[current.y][current.x]) {
+  while (!(traversal->empty()) || visited[current.x][current.y]) {
     current = traversal->pop();
   }
   // Marks current as visited
   visited[current.x][current.y] = true;
 
-  cs225::HSLAPixel & p1 = png.getPixel(current.y, current.x);
+  cs225::HSLAPixel & p1 = png.getPixel(current.x, current.y);
 
   // Add neighbors to the stack
 
@@ -166,13 +166,20 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   /** @todo [Part 1] */
   // Check if iteration part of iterator are the same current and traversal
   // At the end of iteration equal to end();
-  // if (traversal->empty() && other.traversal->empty()) {
-  //   return true;
-  // }
+
   if (traversal == NULL && other.traversal == NULL) {
+    return false;
+  }
+  if (traversal == NULL && other.traversal != NULL) {
     return true;
   }
+
+  if (traversal != NULL && other.traversal == NULL) {
+    return true;
+  }
+
   return false;
+
   // bool thisEmpty = false; 
   // bool otherEmpty = false;
   // if (traversal == NULL) { thisEmpty = true; }
