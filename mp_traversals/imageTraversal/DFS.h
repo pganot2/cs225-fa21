@@ -35,9 +35,19 @@ public:
 private:
 	/** @todo [Part 1] */
 	/** add private members here*/
-  std::stack<Point> stack;
-  PNG png;
-  Point start;
-  Point current;
-  double tolerance;
+
+  /** PNG image to traverse on*/
+    PNG png;
+
+    /** Provided start point for an image traversal*/
+    Point start;
+
+    /** Current point for an image traversal*/
+    Point current;
+  
+    /** Provided tolerance value for an image traversal*/
+    double tolerance;
+    
+    /** Creates a stack to store Point objects for DFS*/
+    std::stack<Point> stack;
 };

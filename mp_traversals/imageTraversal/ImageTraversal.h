@@ -31,7 +31,7 @@ public:
   public:
     Iterator();
     Iterator(PNG & setPNG, Point & setStart, double & setTolerance, ImageTraversal* setTraversal);
-    // add own constructor that constructs a DFS or BFS ?? 
+
     Iterator & operator++();
     Point operator*();
     bool operator!=(const Iterator &other);
@@ -59,10 +59,10 @@ public:
     ImageTraversal* traversal;
 
     /** Amount of rows in an image for a traversal*/
-    unsigned rows;
+    unsigned int rows;
 
     /** Amount of columns in an image for a traversal*/
-    unsigned columns;
+    unsigned int columns;
     
     /** 2D boolean vector that tells if a Point(x, y) has been visited*/
     std::vector<std::vector<bool>> visited;

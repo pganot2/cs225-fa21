@@ -22,7 +22,7 @@ using namespace cs225;
  */
 class BFS : public ImageTraversal {
 public:
-  BFS(const PNG & png, const Point & start, double tolerance);
+  BFS(const PNG & setPNG, const Point & setStart, double setTolerance);
 
   ImageTraversal::Iterator begin();
   ImageTraversal::Iterator end();
@@ -35,9 +35,22 @@ public:
 private:
   /** @todo [Part 1] */
   /** add private members here*/
-  std::queue<Point> queue;
-  PNG png;
-  Point start;
-  Point current;
-  double tolerance;
+  
+  /** PNG image to traverse on*/
+    PNG png;
+
+    /** Provided start point for an image traversal*/
+    Point start;
+
+    /** Current point for an image traversal*/
+    Point current;
+  
+    /** Provided tolerance value for an image traversal*/
+    double tolerance;
+    
+    /** Queue to store Point objects for BFS*/
+    std::queue<Point> queue;
+
+    /** 2D boolean vector that tells if a Point(x, y) has been visited*/
+    std::vector<std::vector<bool>> visited;
 };
