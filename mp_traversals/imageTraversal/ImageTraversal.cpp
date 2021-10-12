@@ -52,9 +52,10 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
   current = traversal->peek();
   rows = png.height();
   columns = png.width();
-  visited.resize(rows);
+  // Sets convention so that x, points are the y-axis
+  visited.resize(columns);
   for (unsigned i = 0; i < rows; i++) {
-    visited[i].resize(columns);
+    visited[i].resize(rows);
   }
   traversal->add(start);
   // Double check convention since rows are height and columns are width
@@ -71,20 +72,21 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 
   // Marks current as visited
   // Assume current point is top most element
-  // If stack // queue is empty, then we are done.
 
+  // If stack // queue is empty, then we are done.
   if (traversal->empty()) {
     traversal = NULL;
     return *this;
   }
 
   current = traversal->pop();
-  
+
   while (!(traversal->empty()) || visited[current.y][current.x]) {
     current = traversal->pop();
   }
   // Marks current as visited
-  visited[current.y][current.x] = true; // Double check convention since rows are height
+  visited[current.x][current.y] = true;
+
   cs225::HSLAPixel & p1 = png.getPixel(current.y, current.x);
 
   // Add neighbors to the stack
@@ -92,49 +94,54 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   // Adding points off the edge of the image and it is wrapping?
 
   // Checks if point on the right is within the bounds of the png
-  if ((current.x + 1) < columns) {
-    // Pixel of point on the right
-    Point point(current.y, current.x + 1);
-    cs225::HSLAPixel & p2 = png.getPixel(current.y, current.x + 1);
+  if ((current.x + 1 < columns) && (current.y < rows)) {
+    // Point on the right
+    Point right(current.x + 1, current.y);
+    // Pixe of the point on the right
+    cs225::HSLAPixel & p2 = png.getPixel(right.x, right.y);
     double delta = calculateDelta(p1, p2);
     if (delta < tolerance) {
-      traversal->add(point);
+      traversal->add(right);
     }
   }
+
   // Checks if pixel below is within the bounds of the png
+  if ((current.x < columns) && (current.y + 1 < rows)) {
+    // Point below
+    Point below(current.x, current.y + 1);
+    // Pixel of the point below
+    cs225::HSLAPixel & p2 = png.getPixel(below.x, below.y);
+    double delta = calculateDelta(p1, p2);
+    if (delta < tolerance) {
+      traversal->add(below);
+    }
+  }
 
-  // if ((current.y + 1) < rows) {
-  //   // Pixel of point on the right
-  //   Point point(current.y + 1, current.x);
-  //   cs225::HSLAPixel & p2 = png.getPixel(current.y + 1, current.x);
-  //   double delta = calculateDelta(p1, p2);
-  //   if (delta < tolerance) {
-  //     traversal->add(point);
-  //   }
-  // }
   // Checks if point to the left is within the bounds of the png
-  if ((current.x - 1) >= 0) {
-    // Pixel of point on the right
-    Point point(current.y, current.x - 1);
-    cs225::HSLAPixel & p2 = png.getPixel(current.y, current.x - 1);
+  if ((current.x - 1 < columns) && (current.y < rows)) {
+    // Point on the left
+    Point left(current.x - 1, current.y);
+    // Pixe of the point on the left
+    cs225::HSLAPixel & p2 = png.getPixel(left.x, left.y);
     double delta = calculateDelta(p1, p2);
     if (delta < tolerance) {
-      traversal->add(point);
-    }
-  }
-  // Checks if pixel above is within the bounds of the png
-  if ((current.y - 1) >= 0) {
-    // Pixel of point on the right
-    Point point(current.y - 1, current.x);
-    cs225::HSLAPixel & p2 = png.getPixel(current.y - 1, current.x);
-    double delta = calculateDelta(p1, p2);
-    if (delta < tolerance) {
-      traversal->add(point);
+      traversal->add(left);
     }
   }
 
-  // // use vector visited here
-  // // Check if point is visited // or not out of bounds
+  // Checks if pixel above is within the bounds of the png
+  if ((current.x < columns) && (current.y - 1 < rows)) {
+    // Point above
+    Point above(current.x, current.y - 1);
+    // Pixe of the point on the right
+    cs225::HSLAPixel & p2 = png.getPixel(above.x, above.y);
+    double delta = calculateDelta(p1, p2);
+    if (delta < tolerance) {
+      traversal->add(above);
+    }
+  }
+
+  // Check if point is visited // or not out of bounds
   // // Edge case check
   return *this;
 }
@@ -159,9 +166,13 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   /** @todo [Part 1] */
   // Check if iteration part of iterator are the same current and traversal
   // At the end of iteration equal to end();
-  if (traversal->empty() && other.traversal->empty()) {
+  // if (traversal->empty() && other.traversal->empty()) {
+  //   return true;
+  // }
+  if (traversal == NULL && other.traversal == NULL) {
     return true;
   }
+  return false;
   // bool thisEmpty = false; 
   // bool otherEmpty = false;
   // if (traversal == NULL) { thisEmpty = true; }
@@ -173,6 +184,6 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   // if (thisEmpty && otherEmpty) return false; // both empty then the traversals are equal, return true
   // else if ((!thisEmpty)&&(!otherEmpty)) return (traversal != other.traversal); //both not empty then compare the traversals
   // else return true; // one is empty while the other is not, return true
-  return false;
+  //return false;
 }
 
