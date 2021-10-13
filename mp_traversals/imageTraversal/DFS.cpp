@@ -74,7 +74,6 @@ Point DFS::pop() {
 Point DFS::peek() const {
   /** @todo [Part 1] */
   // Current point in a DFS Traversal is the top point of the stack
-  //return empty() ? NULL : stack.top();
   return stack.top();
 }
 

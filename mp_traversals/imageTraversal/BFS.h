@@ -50,7 +50,4 @@ private:
     
     /** Queue to store Point objects for BFS*/
     std::queue<Point> queue;
-
-    /** 2D boolean vector that tells if a Point(x, y) has been visited*/
-    std::vector<std::vector<bool>> visited;
 };

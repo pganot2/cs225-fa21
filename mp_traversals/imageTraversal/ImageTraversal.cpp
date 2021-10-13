@@ -35,7 +35,7 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
  */
 ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
-  //traversal = NULL;
+  traversal = NULL;
 }
 
 /**
@@ -49,17 +49,16 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
   // start = setStart;
   // tolerance = setTolerance;
   // traversal = setTraversal;
+  std::cout << traversal->peek() << std::endl;
   current = traversal->peek();
   rows = png.height();
   columns = png.width();
-  // Sets convention so that x, points are the y-axis
-  visited.resize(columns);
-  for (unsigned i = 0; i < rows; i++) {
-    visited[i].resize(rows);
-  }
-  traversal->add(start);
-  // Double check convention since rows are height and columns are width
-  // [columns][rows]
+  //Sets convention so that x, points are the y-axis
+  // visited.resize(columns);
+  // for (unsigned i = 0; i < rows; i++) {
+  //   visited[i].resize(rows);
+  // }
+  visited = std::vector<std::vector<bool>>(columns, std::vector<bool>(rows, false));
 }
 
 /**
@@ -70,34 +69,22 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
 
-  // Marks current as visited
   // Assume current point is top most element
+  
+  // Initalize current as startPoint
 
-  // If stack // queue is empty, then we are done.
-  if (traversal->empty()) {
-    traversal = NULL;
-    return *this;
-  }
-
-  current = traversal->pop();
-
-  while (!(traversal->empty()) || visited[current.x][current.y]) {
-    current = traversal->pop();
-  }
   // Marks current as visited
   visited[current.x][current.y] = true;
 
   cs225::HSLAPixel & p1 = png.getPixel(current.x, current.y);
 
-  // Add neighbors to the stack
-
-  // Adding points off the edge of the image and it is wrapping?
+  // Pushes current and neighbors to stack
 
   // Checks if point on the right is within the bounds of the png
   if ((current.x + 1 < columns) && (current.y < rows)) {
     // Point on the right
     Point right(current.x + 1, current.y);
-    // Pixe of the point on the right
+    // Pixel of the point on the right
     cs225::HSLAPixel & p2 = png.getPixel(right.x, right.y);
     double delta = calculateDelta(p1, p2);
     if (delta < tolerance) {
@@ -141,9 +128,20 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     }
   }
 
-  // Check if point is visited // or not out of bounds
-  // // Edge case check
-  return *this;
+  current = traversal->peek();
+  assert(traversal != NULL);
+  while (!(traversal->empty()) && visited[current.x][current.y]) {
+    current = traversal->pop();
+  }
+
+  // If stack // queue is empty, then we are done.
+  if (traversal->empty()) {
+    // Sets traversal = NULL indicating that we are finished
+    traversal = NULL;
+    return *this;
+  }
+
+  return *this; // Check Edge Cases for future tests
 }
 
 /**
@@ -154,7 +152,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
   //return Point(0, 0);
-  return traversal->peek();
+  return current;
 }
 
 /**
@@ -170,27 +168,7 @@ bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other)
   if (traversal == NULL && other.traversal == NULL) {
     return false;
   }
-  if (traversal == NULL && other.traversal != NULL) {
-    return true;
-  }
 
-  if (traversal != NULL && other.traversal == NULL) {
-    return true;
-  }
-
-  return false;
-
-  // bool thisEmpty = false; 
-  // bool otherEmpty = false;
-  // if (traversal == NULL) { thisEmpty = true; }
-  // if (other.traversal == NULL) { otherEmpty = true; }
-
-  // if (!thisEmpty && traversal != NULL)  { thisEmpty = traversal->empty(); }
-  // if (!otherEmpty && other.traversal != NULL) { otherEmpty = other.traversal->empty(); }
-
-  // if (thisEmpty && otherEmpty) return false; // both empty then the traversals are equal, return true
-  // else if ((!thisEmpty)&&(!otherEmpty)) return (traversal != other.traversal); //both not empty then compare the traversals
-  // else return true; // one is empty while the other is not, return true
-  //return false;
+  return true;
 }
 
