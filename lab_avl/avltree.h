@@ -227,6 +227,12 @@ class AVLTree
      */
     void getPreorderTraversal(const Node* subRoot, std::vector<K>& traversal) const;
 
+    /**
+     * Updates the height for specific Node
+     * @param t root to update height for
+     */
+    void updateHeight(Node*& t);
+
     /** This variable is used for grading. */
     std::ostream* _out;
 

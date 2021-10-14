@@ -49,7 +49,6 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
   // start = setStart;
   // tolerance = setTolerance;
   // traversal = setTraversal;
-  std::cout << traversal->peek() << std::endl;
   current = traversal->peek();
   rows = png.height();
   columns = png.width();

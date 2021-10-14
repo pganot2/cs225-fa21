@@ -31,4 +31,7 @@ private:
 	/** @todo [Part 2] */
 	/** add private members here*/
 
+  /** PNG image to flood fill on*/
+  PNG png;
+  
 };

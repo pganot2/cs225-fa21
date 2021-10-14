@@ -16,7 +16,9 @@ using namespace cs225;
  * 
  * @param png The starting image of a FloodFilledImage
  */
-FloodFilledImage::FloodFilledImage(const PNG & png) {
+FloodFilledImage::FloodFilledImage(const PNG & png)
+  :png(png)
+{
   /** @todo [Part 2] */
 }
 
@@ -29,6 +31,7 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
+  
 }
 
 /**
