@@ -33,5 +33,10 @@ private:
 
   /** PNG image to flood fill on*/
   PNG png;
-  
+
+  /** Stores ImageTraversal traversals*/
+  vector<ImageTraversal*> traversal_;
+
+  /** Stores ColorPicker colorPickers*/
+  vector<ColorPicker*> color_picker;
 };

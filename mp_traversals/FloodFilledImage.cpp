@@ -31,7 +31,8 @@ FloodFilledImage::FloodFilledImage(const PNG & png)
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
-  
+  traversal_.push_back(&traversal);
+  color_picker.push_back(&colorPicker);
 }
 
 /**
@@ -56,5 +57,33 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
+  // Plan:
+  // Traverse PNG with traversal_ iterator
+  // Professor Evans: "You need to be storing a traversal each time addFloodFill is called and in animate do them each in order.""
+  // Use a PNG copy of image png since we can't edit png private variable
+  // Does each type of traversal in the vector traversal
+  // get Point // pixel from traversal_
+  // get color for pixel from color_picker
+
+  PNG curr_image = png;
+  // Iterates over traversal vector to get which traversal we want.
+  for (unsigned i = 0; i < traversal_.size(); i++) {
+    ImageTraversal* curr_traversal = traversal_[i];
+    // Does the traversal
+    unsigned interval = 0;
+    for (ImageTraversal::Iterator it = curr_traversal->begin(); it != curr_traversal->end(); ++it) {
+      // Adds frame after certain interval number
+      if (interval % frameInterval == 0) {
+        animation.addFrame(curr_image);
+      }
+      interval++;
+      // Gets the pixel from the traversal
+      cs225::HSLAPixel & pixel = curr_image.getPixel((*it).x, (*it).y);
+      // Changes pixel color based on color_picker
+      pixel = color_picker[i]->getColor((*it).x, (*it).y);
+    }
+  }
+  animation.addFrame(curr_image);
+
   return animation;
 }

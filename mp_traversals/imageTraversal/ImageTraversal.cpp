@@ -45,14 +45,10 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
   :png(setPNG), start(setStart), tolerance(setTolerance), traversal(setTraversal)
 {
   /** @todo [Part 1] */
-  // png = setPNG;
-  // start = setStart;
-  // tolerance = setTolerance;
-  // traversal = setTraversal;
   current = traversal->peek();
   rows = png.height();
   columns = png.width();
-  //Sets convention so that x, points are the y-axis
+  //Sets convention so that x coordinates are the y-axis
   // visited.resize(columns);
   // for (unsigned i = 0; i < rows; i++) {
   //   visited[i].resize(rows);
@@ -128,7 +124,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   }
 
   current = traversal->peek();
-  assert(traversal != NULL);
+  
   while (!(traversal->empty()) && visited[current.x][current.y]) {
     current = traversal->pop();
   }
