@@ -69,7 +69,6 @@ Point BFS::pop() {
  */
 Point BFS::peek() const {
   /** @todo [Part 1] */
-  //return empty() ? NULL : queue.front();
   return queue.front();
 }
 

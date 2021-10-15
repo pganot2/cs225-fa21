@@ -45,6 +45,7 @@ ImageTraversal::Iterator::Iterator(PNG & setPNG, Point & setStart, double & setT
   :png(setPNG), start(setStart), tolerance(setTolerance), traversal(setTraversal)
 {
   /** @todo [Part 1] */
+
   current = traversal->peek();
   rows = png.height();
   columns = png.width();
@@ -71,7 +72,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   // Marks current as visited
   visited[current.x][current.y] = true;
 
-  cs225::HSLAPixel & p1 = png.getPixel(current.x, current.y);
+  cs225::HSLAPixel & p1 = png.getPixel(start.x, start.y);
 
   // Pushes current and neighbors to stack
 
