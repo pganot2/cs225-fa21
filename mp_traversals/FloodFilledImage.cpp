@@ -77,13 +77,17 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
         animation.addFrame(curr_image);
       }
       interval++;
-      // Gets the pixel from the traversal
+      // Gets the Point pixel from the traversal
       cs225::HSLAPixel & pixel = curr_image.getPixel((*it).x, (*it).y);
       // Changes pixel color based on color_picker
       pixel = color_picker[i]->getColor((*it).x, (*it).y);
     }
   }
-  animation.addFrame(curr_image);
+  unsigned i = 0;
+  while (i != 20) {
+    animation.addFrame(curr_image);
+    i++;
+  }
 
   return animation;
 }
