@@ -71,23 +71,27 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
     ImageTraversal* curr_traversal = traversal_[i];
     // Does the traversal
     unsigned interval = 0;
-    for (ImageTraversal::Iterator it = curr_traversal->begin(); it != curr_traversal->end(); ++it) {
+    // for (auto it = curr_traversal->begin(); it != curr_traversal->end(); ++it) {
+    for (const Point & p : *curr_traversal ) {
       // Adds frame after certain interval number
       if (interval % frameInterval == 0) {
         animation.addFrame(curr_image);
       }
       interval++;
       // Gets the Point pixel from the traversal
-      cs225::HSLAPixel & pixel = curr_image.getPixel((*it).x, (*it).y);
+      //cs225::HSLAPixel & pixel = curr_image.getPixel((*it).x, (*it).y);
+      cs225::HSLAPixel & pixel = curr_image.getPixel(p.x, p.y);
       // Changes pixel color based on color_picker
-      pixel = color_picker[i]->getColor((*it).x, (*it).y);
+      //pixel = color_picker[i]->getColor((*it).x, (*it).y);
+      pixel = color_picker[i]->getColor(p.x, p.y);
     }
   }
-  unsigned i = 0;
-  while (i != 20) {
-    animation.addFrame(curr_image);
-    i++;
-  }
+  animation.addFrame(curr_image);
+  // unsigned i = 0;
+  // while (i != 20) {
+  //   animation.addFrame(curr_image);
+  //   i++;
+  // }
 
   return animation;
 }
