@@ -37,6 +37,7 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
     /**
      * @todo Implement this function!
      */
+    
 }
 
 template <int Dim>

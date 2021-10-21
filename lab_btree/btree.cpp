@@ -149,11 +149,11 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
     /* TODO Your code goes here! */
 
     // Insert a pointer into parent's children which will point to the new right node
-    parent->elements.insert(elem_itr, child->elements[mid_elem_idx]);
+    parent->elements.insert(elem_itr, *mid_elem_itr);
     parent->children.insert(child_itr, new_right);
     
     new_right->elements.assign(mid_elem_itr + 1, child->elements.end());
-    new_right->children.assign(mid_child_itr, child->children.end());
+    new_right->children.assign(mid_child_itr, child->children.end());                   
 
     new_left->elements.assign(child->elements.begin(), mid_elem_itr);
     new_left->children.assign(child->children.begin(), mid_child_itr);

@@ -340,6 +340,7 @@ size_t insertion_idx_helper(const std::vector<T>& elements, const C& val, size_t
     if (end >= start) {
         size_t middle_index = (start + end) / 2;
         if (start == end) {
+            // In this case, middle_index = end = start
             if (elements[end] > val || elements[end] == val) {
                 return end;
             } else {
