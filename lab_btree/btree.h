@@ -327,6 +327,42 @@ class BTree
 };
 
 /**
+ * Insertion Index Helper Function
+ * @return The index at which val could be inserted into elements to maintain
+ * the sorted order of elements. If val occurs in elements, then this returns
+ * the index of val in elements.
+ */
+template <class T, class C>
+size_t insertion_idx_helper(const std::vector<T>& elements, const C& val, size_t start, size_t end)
+{   
+    // Binary Search
+    // Base case when binary search whens start and end have the same element
+    if (end >= start) {
+        size_t middle_index = (start + end) / 2;
+        if (start == end) {
+            if (elements[end] > val || elements[end] == val) {
+                return end;
+            } else {
+                return end + 1;
+            }
+        }
+        // start > end for some reason?
+        if (elements[middle_index] == val) {
+            return middle_index;
+        }
+        // In this case, vector will be cut to start -> middle_index instead of
+        // middle_index - 1
+        if (elements[middle_index] > val) {
+            return insertion_idx_helper(elements, val, start, middle_index);
+        } 
+        if (elements[middle_index] < val) {
+            return insertion_idx_helper(elements, val, middle_index + 1, end);
+        }
+    }
+    return -1;
+}
+
+/**
  * Generalized function for finding the insertion index of a given element
  * into a given sorted vector.
  * @param elements A sorted vector of some type.
@@ -342,8 +378,27 @@ template <class T, class C>
 size_t insertion_idx(const std::vector<T>& elements, const C& val)
 {
     /* TODO Your code goes here! */
-
-    return 5;
+    /* Code sets the index to the right location */
+    // unsigned int i = 0;
+    // while (i < root->elements_.size() && key > root->elements_[i]) {
+    // i++;
+    // }
+    if (elements.empty()) {
+        return 0;
+    }
+    // | 1 | 5 | 7 | 8 |
+    // Returns first bar | if val < 1
+    if (val < elements[0]) {
+        return 0;
+    }
+    if (val > elements[elements.size() - 1]) {
+        return elements.size();
+    }
+    if (val == elements[elements.size() - 1]) {
+        return elements.size() - 1;
+    }
+    
+    return insertion_idx_helper(elements, val, 0, elements.size() - 1);
 }
 
 #include "btree_given.cpp"
