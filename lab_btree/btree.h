@@ -347,7 +347,6 @@ size_t insertion_idx_helper(const std::vector<T>& elements, const C& val, size_t
                 return end + 1;
             }
         }
-        // start > end for some reason?
         if (elements[middle_index] == val) {
             return middle_index;
         }
@@ -384,6 +383,7 @@ size_t insertion_idx(const std::vector<T>& elements, const C& val)
     // while (i < root->elements_.size() && key > root->elements_[i]) {
     // i++;
     // }
+
     if (elements.empty()) {
         return 0;
     }
