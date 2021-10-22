@@ -31,8 +31,18 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
     /**
      * @todo Implement this function!
      */
-
-     return false;
+    // Get Euclidean distances to target for both potential and currentBest
+    // If Euclidean distances are equal then when simply do
+    // currentBest < potential 
+    // Returns true if potential is closer (i.e., has a smaller euclidean distance) to target than current Best
+    if (getEuclideanDistance(target, potential) < getEuclideanDistance(target, currentBest))
+      return true;
+    if (getEuclideanDistance(target, potential) > getEuclideanDistance(target, currentBest))
+      return false;
+    if (getEuclideanDistance(target, potential) == getEuclideanDistance(target, currentBest)) {
+      return potential < currentBest;
+    }
+    return false;
 }
 
 template <int Dim>
@@ -76,5 +86,15 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
      */
 
     return Point<Dim>();
+}
+
+template <int Dim>
+int KDTree<Dim>::getEuclideanDistance(const Point<Dim>& point1, const Point<Dim>& point2) const
+{
+  int sum = 0;
+  for (int i = 0; i < Dim; i++) {
+    sum += (point1[i] - point2[i])*(point1[i] - point2[i]);
+  }
+  return sqrt(sum);
 }
 
