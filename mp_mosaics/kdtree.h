@@ -261,7 +261,22 @@ class KDTree
      */
 
     /** Helper function for calculating the Euclidean Distance for two points */
-    int getEuclideanDistance(const Point<Dim>& point1, const Point<Dim>& point2) const;
+    int getEuclideanDistance(const Point<Dim>& point1,
+                             const Point<Dim>& point2) const;
+
+    /** Helper function for building a KDTree */
+    KDTreeNode* buildTree(vector<Point<Dim>>& newPoints, int curDim,
+                          unsigned left, unsigned right);
+
+    /** Helper function for quickselecting a Point */
+    Point<Dim> quickselect(vector<Point<Dim>>& list, int curDim,
+                           unsigned left, unsigned right, unsigned k);
+
+    /** Helper function for partitioning a list 
+     *  used as a subroutine in quickselect
+     */
+    unsigned partition(vector<Point<Dim>>& list, int curDim, unsigned left,  
+                       unsigned right, unsigned pivotIndex);
 };
 
 #include "kdtree.hpp"
