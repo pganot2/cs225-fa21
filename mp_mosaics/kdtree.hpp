@@ -136,27 +136,25 @@ unsigned KDTree<Dim>::partition(vector<Point<Dim>>& list, int curDim, unsigned l
   // pivotValue for comparing within the for loop
   Point<Dim> pivotValueComparator = list.at(pivotIndex);
   // Swaps list[pivotIndex] and list[right] // Moves pivot to the end
-  Point<Dim> rightValue = list.at(right);
   Point<Dim> temp = list.at(pivotIndex);
-  list.at(pivotIndex) = rightValue;
-  rightValue = temp;
+  list.at(pivotIndex) = list.at(right);
+  list.at(right) = temp;
   
   unsigned storeIndex = left;
 
-  for (unsigned i = left; i < right - 1; i++) {
-    Point<Dim> currPoint = list.at(i);
-    if (smallerDimVal(currPoint, pivotValueComparator, curDim)) {
+  for (unsigned i = left; i < right; i++) {
+    if (smallerDimVal(list.at(i), pivotValueComparator, curDim)) {
       // Swaps list[i] and list[storeIndex]
       temp = list.at(storeIndex);
-      list.at(storeIndex) = currPoint;
-      currPoint = temp;
+      list.at(storeIndex) = list.at(i);
+      list.at(i) = temp;
       // Incremements storeIndex
       storeIndex++;
     }
   }
   // Swaps list[right] and list[storeIndex] // Moves pivot to it's final place
   temp = list.at(storeIndex);
-  list.at(storeIndex) = rightValue;
+  list.at(storeIndex) = list.at(right);
   list.at(right) = temp;
   // Returns storeIndex
   return storeIndex;
@@ -173,12 +171,11 @@ Point<Dim> KDTree<Dim>::quickselect(vector<Point<Dim>>& list, int curDim, unsign
     return list.at(k);
   } else if (k < pivotIndex) {
     right = pivotIndex - 1;
-    quickselect(list, curDim, left, right, k);
+    return quickselect(list, curDim, left, right, k);
   } else {
     left = pivotIndex + 1;
-    quickselect(list, curDim, left, right, k);
+    return quickselect(list, curDim, left, right, k);
   }
-  return list[left];
 }
 
 template <int Dim>
