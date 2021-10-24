@@ -61,10 +61,13 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 }
 
 template <int Dim>
-KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
+KDTree<Dim>::KDTree(const KDTree<Dim>& other)
+     : root(copy(other.root))
+{
   /**
    * @todo Implement this function!
    */
+  this->size = other.size;
 }
 
 template <int Dim>
@@ -72,7 +75,11 @@ const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree<Dim>& rhs) {
   /**
    * @todo Implement this function!
    */
-
+  if (this != &rhs) {
+    clear(root);
+    root = copy(rhs.root);
+  }
+  this->size = rhs.size;
   return *this;
 }
 
@@ -81,6 +88,7 @@ KDTree<Dim>::~KDTree() {
   /**
    * @todo Implement this function!
    */
+  clear(root);
 }
 
 template <int Dim>
@@ -224,4 +232,28 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim,
     }
   }
   return nearest;
+}
+
+template <int Dim>
+typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::copy(const KDTreeNode* subRoot)
+{
+  if (subRoot == NULL) {
+    return NULL;
+  }
+
+  //Copy current node and it's children through recursion
+  KDTreeNode* newNode = new KDTreeNode(subRoot->elements);
+  newNode->left = copy(subRoot->left);
+  newNode->right = copy(subRoot->right);
+  return newNode;
+}
+
+template <int Dim>
+void KDTree<Dim>::clear(KDTreeNode* subRoot) {
+  if (subRoot == NULL)
+        return;
+
+  clear(subRoot->left);
+  clear(subRoot->right);
+  delete subRoot;
 }

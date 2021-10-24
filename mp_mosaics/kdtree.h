@@ -281,6 +281,17 @@ class KDTree
     /** Helper function for the public findNearestNeighbor */
     Point<Dim> findNearestNeighbor(const Point<Dim>& query, int curDim, 
                                    KDTreeNode * curRoot) const;
+
+    /** Helper function for operator= and cctor.
+      * @param subRoot The current node in the recursion
+      */
+    KDTreeNode* copy(const KDTreeNode* subRoot);
+
+    /**
+     * Private helper function for clear that clears beneath the parameter node.
+     * @param subRoot The current node in the recursion
+     */
+    void clear(KDTreeNode* subRoot);
 };
 
 #include "kdtree.hpp"
