@@ -16,6 +16,7 @@ bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
     /**
      * @todo Implement this function!
      */
+    if (curDim < 0 || curDim >= Dim) return false;
     if (first[curDim] < second[curDim]) return true;
     if (first[curDim] > second[curDim]) return false;
     if (first[curDim] == second[curDim]) {
@@ -89,8 +90,8 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     /**
      * @todo Implement this function!
      */
-
-    return Point<Dim>();
+    // Finding nearest neighbor for given query point
+    return findNearestNeighbor(query, 0, root);
 }
 
 template <int Dim>
@@ -109,10 +110,9 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::buildTree(vector<Point<Dim>>& poi
                                                          int curDim, unsigned left, 
                                                          unsigned right)
 {
-  KDTreeNode* curRoot = NULL;
   // Checks if the parameters are within bounds
   if (points.empty() || left < 0 || left >= points.size() || right < 0 || right >= points.size()) {
-    return curRoot;
+    return NULL;
   }
   if (left <= right) {
     // pivotIndex for quickselect
@@ -120,7 +120,7 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::buildTree(vector<Point<Dim>>& poi
     unsigned middle = (left + right) / 2;
     // use quickselect algorithm
     Point<Dim> p = quickselect(points, curDim, left, right, middle);
-    curRoot = new KDTreeNode(p);
+    KDTreeNode* curRoot = new KDTreeNode(p);
     // size_t has no ++ operator so use += 1;
     size += 1;
     curRoot->left = buildTree(points, (curDim + 1) % Dim, left, middle - 1);
@@ -157,7 +157,7 @@ unsigned KDTree<Dim>::partition(vector<Point<Dim>>& list, int curDim, unsigned l
   // Swaps list[right] and list[storeIndex] // Moves pivot to it's final place
   temp = list.at(storeIndex);
   list.at(storeIndex) = rightValue;
-  rightValue = temp;
+  list.at(right) = temp;
   // Returns storeIndex
   return storeIndex;
 }
@@ -166,7 +166,6 @@ template <int Dim>
 Point<Dim> KDTree<Dim>::quickselect(vector<Point<Dim>>& list, int curDim, unsigned left, unsigned right, unsigned k)
 {
   if (left == right) return list[left];
-  // unsigned pivotIndex = rand() % right + left;
   // k is the middle value of the list within buildTree
   unsigned pivotIndex = k;
   pivotIndex = partition(list, curDim, left, right, pivotIndex);
@@ -180,6 +179,47 @@ Point<Dim> KDTree<Dim>::quickselect(vector<Point<Dim>>& list, int curDim, unsign
     quickselect(list, curDim, left, right, k);
   }
   return list[left];
+}
+
+template <int Dim>
+Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim, KDTreeNode * curRoot) const
+{
+  // if curRoot is a leaf node
+  if (curRoot != NULL && curRoot->left == NULL && curRoot->right == NULL) {
+    return curRoot->point;
+  }
+  Point<Dim> nearest = curRoot->point; 
+  Point<Dim> potential = nearest;
+  // if query[dim] is on the left side
+  // if query[dim] < curRoot[dim] then recurse left else recruse right
+  if (smallerDimVal(query, nearest, curDim) && curRoot->left != NULL) {
+    potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left);
+  } else if (!smallerDimVal(query, nearest, curDim) && curRoot->right != NULL) {
+    potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right);
+  }
+  // If curRoot is closer update nearest
+  if (shouldReplace(query, nearest, potential)) {
+    nearest = potential;
+  }
+  // Squared distance between query and nearest is used in shouldReplace
+  int radius = getEuclideanDistance(query, nearest); // Radius between query and plane
+  // Split Distance on Plane
+  int splitDist = (curRoot->point[curDim] - query[curDim])*(curRoot->point[curDim] - query[curDim]);
+
+  if (radius >= splitDist) {
+    if (!smallerDimVal(query, nearest, curDim) && curRoot->left != NULL) {
+      potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left); 
+      if (shouldReplace(query, nearest, potential)) {
+        nearest = potential;
+      }
+    } else if (smallerDimVal(query, nearest, curDim) && curRoot->right != NULL) {
+      potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right); 
+      if (shouldReplace(query, nearest, potential)) {
+        nearest = potential;
+      }
+    }
+  }
+  return nearest;
 }
 
 

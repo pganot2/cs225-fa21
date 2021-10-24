@@ -107,7 +107,7 @@ TEST_CASE("KDTree::shouldReplace Tests", "[weight=1][part=1]") {
 //   compareBinaryFiles(fname, "tests/expected_kdtree_"+to_string(size)+".kd" );
 // }
 
-TEST_CASE("KDTree constructor, 1D (Dim=1)", "[weight=1][part=1]") {
+TEST_CASE("KDTree constructor 1D, (Dim=1)", "[weight=1][part=1]") {
   _test_linear_constructor<1>(10);
 }
 

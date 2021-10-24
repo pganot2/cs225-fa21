@@ -268,15 +268,19 @@ class KDTree
     KDTreeNode* buildTree(vector<Point<Dim>>& newPoints, int curDim,
                           unsigned left, unsigned right);
 
-    /** Helper function for quickselecting a Point */
-    Point<Dim> quickselect(vector<Point<Dim>>& list, int curDim,
-                           unsigned left, unsigned right, unsigned k);
-
     /** Helper function for partitioning a list 
      *  used as a subroutine in quickselect
      */
     unsigned partition(vector<Point<Dim>>& list, int curDim, unsigned left,  
                        unsigned right, unsigned pivotIndex);
+
+    /** Helper function for quickselecting a Point */
+    Point<Dim> quickselect(vector<Point<Dim>>& list, int curDim,
+                           unsigned left, unsigned right, unsigned k);
+
+    /** Helper function for the public findNearestNeighbor */
+    Point<Dim> findNearestNeighbor(const Point<Dim>& query, int curDim, 
+                                   KDTreeNode * curRoot) const;
 };
 
 #include "kdtree.hpp"
