@@ -5,7 +5,6 @@
 
 #include <utility>
 #include <algorithm>
-#include <cstdlib>
 
 using namespace std;
 
@@ -119,14 +118,15 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::buildTree(vector<Point<Dim>>& poi
     // rand() % right + left;
     unsigned middle = (left + right) / 2;
     // use quickselect algorithm
-    Point<Dim> p = quickselect(points, curDim, left, right, middle);
+    Point<Dim> p = quickselect(points, curDim % Dim, left, right, middle);
     KDTreeNode* curRoot = new KDTreeNode(p);
     // size_t has no ++ operator so use += 1;
     size += 1;
     curRoot->left = buildTree(points, (curDim + 1) % Dim, left, middle - 1);
     curRoot->right = buildTree(points, (curDim + 1) % Dim, middle + 1, right);
+    return curRoot;
   }
-  return curRoot;
+  return NULL;
 }
 
 template <int Dim>
@@ -190,12 +190,16 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim,
   }
   Point<Dim> nearest = curRoot->point; 
   Point<Dim> potential = nearest;
+  bool recursed_left = false;
   // if query[dim] is on the left side
   // if query[dim] < curRoot[dim] then recurse left else recruse right
   if (smallerDimVal(query, nearest, curDim) && curRoot->left != NULL) {
-    potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left);
-  } else if (!smallerDimVal(query, nearest, curDim) && curRoot->right != NULL) {
-    potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right);
+    nearest = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left);
+    recursed_left = true;
+  } else {
+    if (curRoot->right != NULL) {
+      nearest = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right);
+    }
   }
   // If curRoot is closer update nearest
   if (shouldReplace(query, nearest, potential)) {
@@ -203,25 +207,24 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim,
   }
   // Squared distance between query and nearest is used in shouldReplace
   int radius = getEuclideanDistance(query, nearest); // Radius between query and plane
+  radius = radius * radius;
   // Split Distance on Plane
   int splitDist = (curRoot->point[curDim] - query[curDim])*(curRoot->point[curDim] - query[curDim]);
-
+ 
   if (radius >= splitDist) {
-    if (!smallerDimVal(query, nearest, curDim) && curRoot->left != NULL) {
-      potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left); 
-      if (shouldReplace(query, nearest, potential)) {
-        nearest = potential;
+    // if left curRoot was recursed, recurse on right sub tree
+    if (recursed_left) {
+      if (curRoot -> right != NULL) {
+        potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right);
       }
-    } else if (smallerDimVal(query, nearest, curDim) && curRoot->right != NULL) {
-      potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right); 
-      if (shouldReplace(query, nearest, potential)) {
-        nearest = potential;
+    } else {
+      if (curRoot -> left != NULL) {
+        potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left);
       }
+    }
+    if (shouldReplace(query, nearest, potential)) {
+      nearest = potential;
     }
   }
   return nearest;
 }
-
-
-
-
