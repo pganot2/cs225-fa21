@@ -261,7 +261,7 @@ class KDTree
      */
 
     /** Helper function for calculating the Euclidean Distance for two points */
-    int getEuclideanDistance(const Point<Dim>& point1,
+    double getEuclideanDistance(const Point<Dim>& point1,
                              const Point<Dim>& point2) const;
 
     /** Helper function for building a KDTree */

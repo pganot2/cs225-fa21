@@ -16,12 +16,10 @@ bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
      * @todo Implement this function!
      */
     if (curDim < 0 || curDim >= Dim) return false;
-    if (first[curDim] < second[curDim]) return true;
-    if (first[curDim] > second[curDim]) return false;
     if (first[curDim] == second[curDim]) {
       return first < second;
     }
-    return false;
+    return first[curDim] < second[curDim];
 }
 
 template <int Dim>
@@ -32,16 +30,14 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
     /**
      * @todo Implement this function!
      */
-    // Returns true if potential is closer (i.e., has a smaller euclidean distance) to target than current Best
-    if (getEuclideanDistance(target, potential) < getEuclideanDistance(target, currentBest))
-      return true;
-    if (getEuclideanDistance(target, potential) > getEuclideanDistance(target, currentBest))
-      return false;
+    //Returns true if potential is closer (i.e., has a smaller euclidean distance) to target than current Best
+    double potentialDistance = getEuclideanDistance(target, potential);
+    double currentBestDistance = getEuclideanDistance(target, currentBest);
     // If Euclidean distances are equal then use operator< for both points
-    if (getEuclideanDistance(target, potential) == getEuclideanDistance(target, currentBest)) {
+    if (potentialDistance == currentBestDistance) {
       return potential < currentBest;
     }
-    return false;
+    return potentialDistance < currentBestDistance;
 }
 
 template <int Dim>
@@ -57,7 +53,6 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
     points.assign(newPoints.begin(), newPoints.end());
     // Builds a tree using recursive helper functions  
     root = buildTree(points, 0, 0, points.size() - 1);
-
 }
 
 template <int Dim>
@@ -102,14 +97,14 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 }
 
 template <int Dim>
-int KDTree<Dim>::getEuclideanDistance(const Point<Dim>& point1, 
+double KDTree<Dim>::getEuclideanDistance(const Point<Dim>& point1, 
                                       const Point<Dim>& point2) const
 {
-  int sum = 0;
+  double sum = 0;
   for (int i = 0; i < Dim; i++) {
     sum += (point1[i] - point2[i])*(point1[i] - point2[i]);
   }
-  return sqrt(sum);
+  return sum;
 }
 
 template <int Dim>
@@ -156,7 +151,6 @@ unsigned KDTree<Dim>::partition(vector<Point<Dim>>& list, int curDim, unsigned l
       temp = list.at(storeIndex);
       list.at(storeIndex) = list.at(i);
       list.at(i) = temp;
-      // Incremements storeIndex
       storeIndex++;
     }
   }
@@ -171,7 +165,7 @@ unsigned KDTree<Dim>::partition(vector<Point<Dim>>& list, int curDim, unsigned l
 template <int Dim>
 Point<Dim> KDTree<Dim>::quickselect(vector<Point<Dim>>& list, int curDim, unsigned left, unsigned right, unsigned k)
 {
-  if (left == right) return list[left];
+  if (left == right) return list.at(left);
   // k is the middle value of the list within buildTree
   unsigned pivotIndex = k;
   pivotIndex = partition(list, curDim, left, right, pivotIndex);
@@ -211,10 +205,9 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim,
     nearest = potential;
   }
   // Squared distance between query and nearest is used in shouldReplace
-  int radius = getEuclideanDistance(query, nearest); // Radius between query and plane
-  radius = radius * radius;
+  double radius = getEuclideanDistance(query, nearest); // Radius between query and plane
   // Split Distance on Plane
-  int splitDist = (curRoot->point[curDim] - query[curDim])*(curRoot->point[curDim] - query[curDim]);
+  double splitDist = (curRoot->point[curDim] - query[curDim])*(curRoot->point[curDim] - query[curDim]);
  
   if (radius >= splitDist) {
     // if left curRoot was recursed, recurse on right sub tree
@@ -222,13 +215,16 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query, int curDim,
       if (curRoot -> right != NULL) {
         potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->right);
       }
+      if (shouldReplace(query, nearest, potential)) {
+        nearest = potential;
+      }
     } else {
       if (curRoot -> left != NULL) {
         potential = findNearestNeighbor(query, (curDim + 1) % Dim, curRoot->left);
       }
-    }
-    if (shouldReplace(query, nearest, potential)) {
-      nearest = potential;
+      if (shouldReplace(query, nearest, potential)) {
+        nearest = potential;
+      }
     }
   }
   return nearest;
@@ -256,4 +252,5 @@ void KDTree<Dim>::clear(KDTreeNode* subRoot) {
   clear(subRoot->left);
   clear(subRoot->right);
   delete subRoot;
+  subRoot = NULL;
 }

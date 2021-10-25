@@ -31,7 +31,7 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
     // Map to assign a point to a specific Tile Image
     map<Point<3>, TileImage*> map;
 
-    for (auto it = theTiles.begin(); it != theTiles.end(); it++) {
+    for (auto it = theTiles.begin(); it != theTiles.end(); ++it) {
         // Get average color of the region in SourceImage and mapTiles();
         LUVAPixel pixel = it->getAverageColor();
 
