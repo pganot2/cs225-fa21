@@ -54,6 +54,14 @@ void SCHashTable<K, V>::insert(K const& key, V const& value)
      * @todo Implement this function.
      *
      */
+    // Increase elems as we are adding more elements
+    elems++;
+    if (shouldResize())
+        resizeTable();
+    // Pass key and size to hash function to find the index
+    unsigned int hash_function_idx = hashes::hash(key, size);
+    // Pushes key value pair to be inserted into the lsit at hash_function_idx
+    table[hash_function_idx].push_front(std::pair<K,V>(key,value));
 }
 
 template <class K, class V>
@@ -66,7 +74,15 @@ void SCHashTable<K, V>::remove(K const& key)
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    unsigned int hash_function_idx = hashes::hash(key, size);
+    if (table[hash_function_idx].empty()) return;
+    for (it = table[hash_function_idx].begin(); it != table[hash_function_idx].end(); it++) {
+        if (key == it->first) {
+            table[hash_function_idx].erase(it);
+            elems--;
+            break;
+        }
+    }
 }
 
 template <class K, class V>
@@ -76,7 +92,12 @@ V SCHashTable<K, V>::find(K const& key) const
     /**
      * @todo: Implement this function.
      */
-
+    unsigned int hashFunction = hashes::hash(key, size);
+    typename std::list<std::pair<K, V>>::iterator it;
+    for (it = table[hashFunction].begin(); it != table[hashFunction].end(); it++) {
+        if (it->first == key)
+            return it->second;
+    }
     return V();
 }
 
@@ -134,4 +155,16 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    size_t new_size = findPrime(size * 2);
+    std::list<std::pair<K, V>>* new_table = new std::list<std::pair<K, V>>[new_size];
+    // Loop through old_table and place into new_table
+    for (size_t i = 0; i < size; i++) {
+        for (it = table[i].begin(); it != table[i].end(); it++) {
+            unsigned int idx = hashes::hash(it->first, new_size);
+            new_table[idx].push_front(std::pair<K,V>(it->first, it->second));
+        }
+    }
+    delete [] table;
+    table = new_table;
+    size = new_size;
 }

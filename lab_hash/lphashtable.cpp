@@ -82,6 +82,9 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
 
     (void) key;   // prevent warnings... When you implement this function, remove this line.
     (void) value; // prevent warnings... When you implement this function, remove this line.
+
+    if (shouldResize()) 
+        resizeTable();
 }
 
 template <class K, class V>
