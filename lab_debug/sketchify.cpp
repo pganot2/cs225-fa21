@@ -87,7 +87,6 @@ void sketchify(std::string inputFile, std::string outputFile) {
             }
         }
     }
-
     // Save the output file
     output->writeToFile(outputFile);
 
