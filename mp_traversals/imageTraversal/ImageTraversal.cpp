@@ -75,7 +75,6 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   cs225::HSLAPixel & p1 = png.getPixel(start.x, start.y);
 
   // Pushes current and neighbors to stack
-
   // Checks if point on the right is within the bounds of the png
   if ((current.x + 1 < columns) && (current.y < rows)) {
     // Point on the right
