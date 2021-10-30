@@ -38,8 +38,6 @@ PNG grayscale(PNG image) {
   return image;
 }
 
-
-
 /**
  * Returns an image with a spotlight centered at (`centerX`, `centerY`).
  *
@@ -79,7 +77,6 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
 
 }
  
-
 /**
  * Returns a image transformed to Illini colors.
  *
@@ -107,7 +104,6 @@ PNG illinify(PNG image) {
 
   return image;
 }
- 
 
 /**
 * Returns an immge that has been watermarked by another image.
