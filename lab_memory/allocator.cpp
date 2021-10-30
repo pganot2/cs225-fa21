@@ -19,9 +19,6 @@ Allocator::Allocator(const std::string& studentFile, const std::string& roomFile
 }
 /**
      * Calls a Allocator destructor.
-     * 
-     * Update 1: added delete alpha and delete rooms.
-     * Update 2: Realized that alpha and rooms are arrays so they need the [] for delete.
      */
 Allocator::~Allocator() {
     delete [] alpha;

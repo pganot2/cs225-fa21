@@ -70,7 +70,6 @@ class Allocator
      */
     void loadRooms(const std::string& file);
 
-
     /**
      * Runs the algorithm on the set of rooms and students.
      */
