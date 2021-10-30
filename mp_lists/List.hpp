@@ -132,7 +132,6 @@ void List<T>::insertBack(const T & ndata) {
 
   // Increases length_ by 1 after adding newNode
   length_++;
-
 }
 
 /**
