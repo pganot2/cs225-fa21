@@ -11,6 +11,5 @@
 namespace RecursionExercises
 {
     int sumDigits(int n);
-
     int triangle(int rows);
 }
