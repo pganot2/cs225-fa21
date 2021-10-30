@@ -155,7 +155,6 @@ bool BinaryTree<T>::isOrderedRecursive(Node * subRoot, Node * leftNode, Node * r
     if (subRoot == NULL) {
         return true;
     }
-
     if ((leftNode != NULL) && (subRoot -> elem < leftNode -> elem)) {
         return false;
     }
