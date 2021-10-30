@@ -398,7 +398,6 @@ size_t insertion_idx(const std::vector<T>& elements, const C& val)
     if (val == elements[elements.size() - 1]) {
         return elements.size() - 1;
     }
-    
     return insertion_idx_helper(elements, val, 0, elements.size() - 1);
 }
 
