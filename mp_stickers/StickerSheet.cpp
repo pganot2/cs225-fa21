@@ -183,7 +183,6 @@ Image StickerSheet::render() const {
             }
         }
     }
-    //put sticker to base
     //Put sticker on x y coordinate of sticker
     return *renderImage;
 }
