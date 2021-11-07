@@ -35,7 +35,7 @@ class DisjointSets {
     void setunion(int a, int b);
 
     /**
-     * @param num
+     * @param elem
      * 
      */
     int size(int elem);
