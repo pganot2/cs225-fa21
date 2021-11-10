@@ -124,7 +124,7 @@ vector<int> SquareMaze::solveMaze()
     queue<int> queue;
 
     // Think on how I can recover the longest path?
-
+    
     return directions;
 }
 
@@ -136,6 +136,35 @@ PNG * SquareMaze::drawMaze() const
     PNG* png = new PNG(_width*10 + 1, _height*10 + 1);
 
     // "Blacken" the entire top most row and left most column, except the entrance (1, 0) through (9, 0)
+    for (unsigned int x = 0; x < png->width(); x++) {
+        if (x >= 1 && x <= 9) {
+            continue;
+        }
+        HSLAPixel & pixel = png->getPixel(x, 0);
+        pixel.l = 0;
+    }
+    for (unsigned int y = 0; y < png->height(); y++) {
+        HSLAPixel & pixel = png->getPixel(0, y);
+        pixel.l = 0;
+    }
+
+    for (int x = 0; x < _width; x++) {
+        for (int y = 0; y < _height; y++) {
+            if (!canTravel(x, y, 0)) {
+                for (unsigned int k = 0; k <= 10; k++) {
+                    HSLAPixel & pixel = png->getPixel((x + 1) * 10, y * 10 + k);
+                    pixel.l = 0;
+                }
+            }
+            if (!canTravel(x, y, 1)) {
+                for (unsigned int k = 0; k <= 10; k++) {
+                    HSLAPixel & pixel = png->getPixel(x * 10 + k, (y + 1) * 10);
+                    pixel.l = 0;
+                }
+            }
+        }
+    }
+
     // For each square in the maze
     return png;
 }
