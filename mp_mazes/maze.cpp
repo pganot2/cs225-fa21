@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 #include <queue>
+#include <map>
 #include <algorithm>
 #include <iostream>
 
@@ -119,13 +120,116 @@ vector<int> SquareMaze::solveMaze()
     /**
      * @todo Implement this function!
      */
-    vector<int> directions;
+    vector<int> path;
+    vector<vector<bool>> visited;
+    vector<vector<int>> distance;
+    /* <first int: current, second int: parent> */
+    map<int, int> directions;
     /* Queue for BFS traversal */
-    queue<int> queue;
+    queue<int> traversal;
+    // Initializes all points on the visited boolean array as false
+    visited = std::vector<std::vector<bool>>(_width, std::vector<bool>(_height, false));
+    distance = std::vector<std::vector<int>>(_width, std::vector<int>(_height, 0));
 
     // Think on how I can recover the longest path?
-    
-    return directions;
+
+    traversal.push(0);
+    visited[0][0] = true;
+    distance[0][0] = 0;
+
+    while (!traversal.empty()) {
+
+        int curr_pt = traversal.front();
+        
+        traversal.pop();
+
+        int x = curr_pt % _width;
+        int y = curr_pt / _height;
+
+        if (canTravel(x, y, 0) && visited[x + 1][y] == false) {
+            traversal.push((x + 1) + y * _width);
+            visited[x + 1][y] = true;
+            distance[x + 1][y] = distance[x][y] + 1;
+            // Sets previous point or the parent point
+            directions[(x + 1) + y * _width] = x + y * _width;
+        }
+
+        if (canTravel(x, y, 1) && visited[x][y + 1] == false) {
+            traversal.push(x + (y + 1) * _width);
+            visited[x][y + 1] = true;
+            distance[x][y + 1] = distance[x][y] + 1;
+            // Sets previous point or the parent point
+            directions[x + (y + 1) * _width] = x + y * _width;
+        }
+
+        if (canTravel(x, y, 2) && visited[x - 1][y] == false) {
+            traversal.push((x - 1) + y * _width);
+            visited[x - 1][y] = true;
+            distance[x - 1][y] = distance[x][y] + 1;
+            // Sets previous point or the parent point
+            directions[(x - 1) + y * _width] = x + y * _width;
+        }
+
+        if (canTravel(x, y, 3) && visited[x][y - 1] == false) {
+            traversal.push(x + (y - 1) * _width);
+            visited[x][y - 1] = true;
+            distance[x][y - 1] = distance[x][y] + 1;
+            // Sets previous point or the parent point
+            directions[x + (y - 1) * _width] = x + y * _width;
+        }
+    }
+    /* Point that is the largest distance from the origin */
+    int destination = 0;
+    for (int i = 0; i < _width; i++) {
+        if (distance[_height - 1][i] >= destination) {
+            destination = distance[_height - 1][i];
+        }
+    }
+    int curr = destination;
+    while (directions[curr] != 0) {
+
+        int x = curr % _width;
+        int y = curr / _height;
+
+        int prev = directions[curr];
+
+        int prev_x = prev % _width;
+        int prev_y = prev % _height;
+        if (prev_y < y) {
+            path.push_back(1);
+        }
+        if (prev_x < x) {
+            path.push_back(0);
+        }
+        if (prev_y > y) {
+            path.push_back(2);
+        }
+        if (prev_x > x) {
+            path.push_back(3);
+        }
+        curr = directions[curr];
+    }
+
+    // Get farthest distance coordinate from bottom row
+    // stick to map and get parent // previous point
+    // Parent of current point, 
+    // if difference in y, choose up or down
+    // difference in x, choose left or right
+    // if x equal, chekc y -coordinates if parent < current
+    // if parent y < current y move downward
+    // if parent y > current y move upward
+
+    // if parent x < current x move right
+    // if parent x > current x move left
+
+    // loop until map[current] == 0;
+
+    // Check which of the 4 directions are available
+    // Push directions into queue
+    // Pop direction from queue and mark as visited
+    // Use a distance variable increment by 1 when moving
+
+    return path;
 }
 
 PNG * SquareMaze::drawMaze() const
@@ -175,6 +279,66 @@ PNG * SquareMaze::drawMazeWithSolution()
      * @todo Implement this function!
      */
     PNG* png = drawMaze();
+    vector<int> solution = solveMaze();
+    int x = 5;
+    int y = 5;
+    for (unsigned i = 0; i < solution.size(); i++) {
+        // If travelling rightwards
+        if (solution[i] == 0) {
+            for (int i = 0; i < 10; i++) {
+                HSLAPixel & pixel = png->getPixel(x, y);
+                //(Red is 0,1,0.5,1 in HSLA)
+                pixel.h = 0;
+                pixel.s = 1;
+                pixel.l = 0.5;
+                pixel.a = 1;
+                x++;
+            }
+        }
+        // If travelling downwards
+        if (solution[i] == 1) {
+            for (int i = 0; i < 10; i++) {
+                HSLAPixel & pixel = png->getPixel(x, y);
+                pixel.h = 0;
+                pixel.s = 1;
+                pixel.l = 0.5;
+                pixel.a = 1;
+                y++;
+            }
+        }
+        // If travelling leftwards
+        if (solution[i] == 2) {
+            for (int i = 0; i < 10; i++) {
+                HSLAPixel & pixel = png->getPixel(x, y);
+                pixel.h = 0;
+                pixel.s = 1;
+                pixel.l = 0.5;
+                pixel.a = 1;
+                x--;
+            }
+        }
+        // If travelling upwards
+        if (solution[i] == 3) {
+            for (int i = 0; i < 10; i++) {
+                HSLAPixel & pixel = png->getPixel(x, y);
+                pixel.h = 0;
+                pixel.s = 1;
+                pixel.l = 0.5;
+                pixel.a = 1;
+                y--;
+            }
+        }
+    }
+
+    walls[x + y * _width].second = false;
+
+    for (unsigned int k = 1; k <= 9; k++) {
+        HSLAPixel & pixel = png->getPixel(x * 10 + k, (y + 1) * 10);
+        pixel.h = 0;
+        pixel.s = 0;
+        pixel.l = 1.0;
+    }
+
     return png;
 }
 
