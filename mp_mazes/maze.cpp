@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <map>
 #include <algorithm>
 #include <iostream>
@@ -88,15 +89,20 @@ bool SquareMaze::canTravel (int x, int y, int dir) const
      * @todo Implement this function!
      */
     if (dir == 0) {
+        //Bounds checking
+        if (x >= _width - 1) return false;
         return !walls[x + y * _width].first;
     }
     if (dir == 1) {
+        if (y >= _height - 1) return false;
         return !walls[x + y * _width].second;
     }
     if (dir == 2) {
+        if (x < 1) return false;
         return !walls[x + y * _width - 1].first;
     }
     if (dir == 3) {
+        if (y < 1) return false;
         return !walls[x + (y - 1) * _width].second;
     }
     return false;
@@ -120,8 +126,11 @@ vector<int> SquareMaze::solveMaze()
     /**
      * @todo Implement this function!
      */
+    /* Vector path to return to reach desired destination */
     vector<int> path;
+    /* 2D vector to mark that a location is visited; */
     vector<vector<bool>> visited;
+    /* 2D vector for the distance at each point */
     vector<vector<int>> distance;
     /* <first int: current, second int: parent> */
     map<int, int> directions;
@@ -130,8 +139,6 @@ vector<int> SquareMaze::solveMaze()
     // Initializes all points on the visited boolean array as false
     visited = std::vector<std::vector<bool>>(_width, std::vector<bool>(_height, false));
     distance = std::vector<std::vector<int>>(_width, std::vector<int>(_height, 0));
-
-    // Think on how I can recover the longest path?
 
     traversal.push(0);
     visited[0][0] = true;
@@ -144,12 +151,13 @@ vector<int> SquareMaze::solveMaze()
         traversal.pop();
 
         int x = curr_pt % _width;
-        int y = curr_pt / _height;
+        int y = curr_pt / _width;
 
         if (canTravel(x, y, 0) && visited[x + 1][y] == false) {
             traversal.push((x + 1) + y * _width);
             visited[x + 1][y] = true;
             distance[x + 1][y] = distance[x][y] + 1;
+
             // Sets previous point or the parent point
             directions[(x + 1) + y * _width] = x + y * _width;
         }
@@ -179,35 +187,49 @@ vector<int> SquareMaze::solveMaze()
         }
     }
     /* Point that is the largest distance from the origin */
-    int destination = 0;
+    int destination = distance[_width - 1][_height - 1];
+    int curr = (_width - 1) + (_height - 1) * _width;
+
     for (int i = 0; i < _width; i++) {
-        if (distance[_height - 1][i] >= destination) {
-            destination = distance[_height - 1][i];
+        if (distance[i][_height - 1] >= destination) {
+            destination = distance[i][_height - 1];
+            curr = i + (_height - 1) * _width;
         }
     }
-    int curr = destination;
+    stack<int> stack;
     while (directions[curr] != 0) {
 
-        int x = curr % _width;
-        int y = curr / _height;
+        int curr_x = curr % _width;
+        int curr_y = curr / _height;
 
         int prev = directions[curr];
-
+        // Check if conventions right, different TAs have said different stuff
         int prev_x = prev % _width;
-        int prev_y = prev % _height;
-        if (prev_y < y) {
-            path.push_back(1);
+        int prev_y = prev / _height;
+
+        // If parent is to the left, previous move was a rightward move, so push dir = 0.
+        if (prev_x < curr_x) {
+            stack.push(0);
         }
-        if (prev_x < x) {
-            path.push_back(0);
+        // If parent is to the right, previous move was a left move, so push dir = 2.
+        if (prev_x > curr_x) {
+            stack.push(2);
         }
-        if (prev_y > y) {
-            path.push_back(2);
+        // If parent is on top, previous move was a downward move, so push dir = 1.
+        if (prev_y < curr_y) {
+            stack.push(1);
         }
-        if (prev_x > x) {
-            path.push_back(3);
+        // If parent is on the bottom, previous move was a upward move, so push dir = 3.
+        if (prev_y > curr_y) {
+            stack.push(3);
         }
+        // Update curr so that is is now it's parent or previous point.
         curr = directions[curr];
+    }
+
+    while(!stack.empty()) {
+        path.push_back(stack.top());
+        stack.pop();
     }
 
     // Get farthest distance coordinate from bottom row
@@ -228,6 +250,8 @@ vector<int> SquareMaze::solveMaze()
     // Push directions into queue
     // Pop direction from queue and mark as visited
     // Use a distance variable increment by 1 when moving
+
+    //std::reverse(path.begin(),path.end());
 
     return path;
 }
@@ -279,9 +303,12 @@ PNG * SquareMaze::drawMazeWithSolution()
      * @todo Implement this function!
      */
     PNG* png = drawMaze();
+
     vector<int> solution = solveMaze();
+
     int x = 5;
     int y = 5;
+    
     for (unsigned i = 0; i < solution.size(); i++) {
         // If travelling rightwards
         if (solution[i] == 0) {
@@ -341,5 +368,3 @@ PNG * SquareMaze::drawMazeWithSolution()
 
     return png;
 }
-
-

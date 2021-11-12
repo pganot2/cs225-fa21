@@ -9,7 +9,7 @@
 #include "anagram_dict.h"
 
 #include <algorithm> /* I wonder why this is included... */
-#include <fstream>
+#include <fstream>  
 
 using std::string;
 using std::vector;
