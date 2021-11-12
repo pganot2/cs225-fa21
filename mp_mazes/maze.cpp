@@ -191,13 +191,13 @@ vector<int> SquareMaze::solveMaze()
     int curr = (_width - 1) + (_height - 1) * _width;
 
     for (int i = 0; i < _width; i++) {
-        if (distance[i][_height - 1] >= destination) {
+        if (distance[i][_height - 1] > destination) {
             destination = distance[i][_height - 1];
             curr = i + (_height - 1) * _width;
         }
     }
     stack<int> stack;
-    while (directions[curr] != 0) {
+    while (curr != 0) {
 
         int curr_x = curr % _width;
         int curr_y = curr / _height;
@@ -357,14 +357,18 @@ PNG * SquareMaze::drawMazeWithSolution()
         }
     }
 
-    walls[x + y * _width].second = false;
+    // Fixes bug where last pixel in red line isn't colored red
+    HSLAPixel & k_pixel = png->getPixel(x, y);
+    k_pixel.h = 0;
+    k_pixel.s = 1;
+    k_pixel.l = 0.5;
+    k_pixel.a = 1;
 
     for (unsigned int k = 1; k <= 9; k++) {
-        HSLAPixel & pixel = png->getPixel(x * 10 + k, (y + 1) * 10);
+        HSLAPixel & pixel = png->getPixel((x - 5) + k, y + 5);
         pixel.h = 0;
         pixel.s = 0;
         pixel.l = 1.0;
     }
-
     return png;
 }
