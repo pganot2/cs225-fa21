@@ -203,7 +203,6 @@ vector<int> SquareMaze::solveMaze()
         int curr_y = curr / _height;
 
         int prev = directions[curr];
-        // Check if conventions right, different TAs have said different stuff
         int prev_x = prev % _width;
         int prev_y = prev / _height;
 
@@ -231,27 +230,6 @@ vector<int> SquareMaze::solveMaze()
         path.push_back(stack.top());
         stack.pop();
     }
-
-    // Get farthest distance coordinate from bottom row
-    // stick to map and get parent // previous point
-    // Parent of current point, 
-    // if difference in y, choose up or down
-    // difference in x, choose left or right
-    // if x equal, chekc y -coordinates if parent < current
-    // if parent y < current y move downward
-    // if parent y > current y move upward
-
-    // if parent x < current x move right
-    // if parent x > current x move left
-
-    // loop until map[current] == 0;
-
-    // Check which of the 4 directions are available
-    // Push directions into queue
-    // Pop direction from queue and mark as visited
-    // Use a distance variable increment by 1 when moving
-
-    //std::reverse(path.begin(),path.end());
 
     return path;
 }
