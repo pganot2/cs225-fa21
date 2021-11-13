@@ -43,7 +43,8 @@ unsigned long memoized_fib(unsigned long n)
     auto lookup = memo.find(n);
     if (lookup != memo.end()) {
         return lookup->second;
-    } else {
+    } 
+    else {
         unsigned long result = fib(n);
         memo[n] = result;
         return result;
